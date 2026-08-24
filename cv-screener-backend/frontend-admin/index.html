@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HUNTLY Admin – Quản lý tuyển dụng</title>
+    <meta name="description" content="Bảng điều khiển quản trị tuyển dụng: xem hồ sơ, chấm điểm AI, cập nhật trạng thái ứng viên." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      /* ── DESIGN TOKENS ── */
+      :root {
+        --bg:           #070b1c;
+        --bg-2:         #0c1228;
+        --bg-3:         #111830;
+        --glass:        rgba(12,18,40,0.75);
+        --glass-light:  rgba(255,255,255,0.04);
+        --border:       rgba(255,255,255,0.08);
+        --border-glow:  rgba(99,179,255,0.22);
+        --text:         #eef2ff;
+        --muted:        #6b7a99;
+        --dim:          #3b4465;
+        --primary:      #4fa3e8;
+        --primary-2:    #6b8ef5;
+        --primary-glow: rgba(79,163,232,0.15);
+        --accent:       #a78bfa;
+        --success:      #34d399;
+        --success-glow: rgba(52,211,153,0.13);
+        --warning:      #fbbf24;
+        --warning-glow: rgba(251,191,36,0.13);
+        --danger:       #f87171;
+        --danger-glow:  rgba(248,113,113,0.13);
+        --purple:       #818cf8;
+        --sidebar-w:    260px;
+        --radius:       12px;
+        --radius-sm:    8px;
+        --font-d:       'Outfit',  sans-serif;
+        --font-b:       'Inter',   sans-serif;
+        --shadow:       0 8px 40px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.04) inset;
+        --t:            0.2s cubic-bezier(0.4,0,0.2,1);
+      }
+
+      *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+      html { scroll-behavior:smooth; }
+      body {
+        font-family: var(--font-b);
+        background: var(--bg);
+        background-image:
+          radial-gradient(ellipse 70% 40% at 0% 0%, rgba(79,163,232,0.08) 0%, transparent 60%),
+          radial-gradient(ellipse 50% 40% at 100% 100%, rgba(167,139,250,0.06) 0%, transparent 60%);
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      ::-webkit-scrollbar { width: 5px; }
+      ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 9px; }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        position: fixed;
+        top: 0; left: 0;
+        width: var(--sidebar-w);
+        height: 100vh;
+        background: var(--bg-2);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        padding: 28px 16px;
+        z-index: 200;
+        transition: transform var(--t);
+      }
+      .sidebar-logo {
+        font-family: var(--font-d);
+        font-size: 1.5rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #4fa3e8, #a78bfa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.04em;
+        margin-bottom: 4px;
+        display: block;
+        text-decoration: none;
+      }
+      .sidebar-subtitle {
+        font-size: 0.72rem;
+        color: var(--muted);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 28px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-section-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--dim);
+        margin: 20px 0 8px 8px;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: var(--radius-sm);
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--t);
+        text-decoration: none;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+      }
+      .nav-item:hover { background: var(--glass-light); color: var(--text); }
+      .nav-item.active { background: var(--primary-glow); color: var(--primary); border: 1px solid rgba(79,163,232,0.2); }
+      .nav-item .nav-icon { font-size: 1rem; flex-shrink: 0; }
+      .nav-spacer { flex: 1; }
+      .nav-bottom { border-top: 1px solid var(--border); padding-top: 16px; }
+
+      /* ── MAIN CONTENT ── */
+      .main {
+        margin-left: var(--sidebar-w);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .topbar {
+        position: sticky;
+        top: 0;
+        background: rgba(7,11,28,0.92);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 32px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 100;
+        gap: 16px;
+      }
+      .topbar-title {
+        font-family: var(--font-d);
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .topbar-actions { display: flex; gap: 10px; align-items: center; }
+
+      .content { padding: 32px; flex: 1; }
+
+      /* ── TABS ── */
+      .tab-strip {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 28px;
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 5px;
+        width: fit-content;
+      }
+      .tab-btn {
+        padding: 8px 20px;
+        border-radius: 8px;
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        font-family: var(--font-b);
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--t);
+      }
+      .tab-btn.active { background: var(--primary-glow); color: var(--primary); border: 1px solid rgba(79,163,232,0.25); }
+      .tab-btn:hover:not(.active) { color: var(--text); background: var(--glass-light); }
+
+      /* ── STATS CARDS ── */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      .stat-card {
+        background: var(--glass);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        transition: border-color var(--t);
+      }
+      .stat-card:hover { border-color: var(--border-glow); }
+      .stat-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+      .stat-value {
+        font-family: var(--font-d);
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .stat-value.primary { color: var(--primary); }
+      .stat-value.success { color: var(--success); }
+      .stat-value.warning { color: var(--warning); }
+      .stat-value.accent  { color: var(--accent); }
+
+      /* ── SECTION HEADER ── */
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .section-title {
+        font-family: var(--font-d);
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      /* ── GLASS PANEL ── */
+      .panel {
+        background: var(--glass);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(16px);
+      }
+
+      /* ── BUTTONS ── */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        font-family: var(--font-b);
+        font-weight: 600;
+        font-size: 0.88rem;
+        padding: 9px 18px;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all var(--t);
+        border: none;
+        white-space: nowrap;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(79,163,232,0.3);
+      }
+      .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(79,163,232,0.4); filter: brightness(1.08); }
+      .btn-secondary { background: var(--glass-light); border: 1px solid var(--border); color: var(--text); }
+      .btn-secondary:hover { background: rgba(255,255,255,0.08); border-color: var(--border-glow); }
+      .btn-danger { background: var(--danger-glow); border: 1px solid rgba(248,113,113,0.3); color: var(--danger); }
+      .btn-danger:hover { background: rgba(248,113,113,0.2); }
+      .btn-success-sm { background: var(--success-glow); border: 1px solid rgba(52,211,153,0.3); color: var(--success); }
+      .btn-accent-sm { background: rgba(167,139,250,0.12); border: 1px solid rgba(167,139,250,0.3); color: var(--accent); }
+      .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+      .btn-full { width: 100%; }
+      .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+      /* ── FORM ── */
+      .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+      label.form-label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--muted);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      input[type="text"], input[type="email"], input[type="date"],
+      textarea, select {
+        background: rgba(7,11,28,0.8);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 10px 14px;
+        color: var(--text);
+        font-family: var(--font-b);
+        font-size: 0.9rem;
+        outline: none;
+        transition: all var(--t);
+        width: 100%;
+      }
+      input:focus, textarea:focus, select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-glow);
+      }
+      input::placeholder, textarea::placeholder { color: var(--dim); }
+      textarea { min-height: 90px; resize: vertical; }
+      select option { background: var(--bg-2); }
+      .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+      .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+      /* ── BADGE ── */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 10px;
+        border-radius: 100px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+        white-space: nowrap;
+      }
+      .badge-primary { background: rgba(79,163,232,0.12); border: 1px solid rgba(79,163,232,0.3); color: var(--primary); }
+      .badge-success { background: var(--success-glow); border: 1px solid rgba(52,211,153,0.3); color: var(--success); }
+      .badge-warning { background: var(--warning-glow); border: 1px solid rgba(251,191,36,0.3); color: var(--warning); }
+      .badge-danger  { background: var(--danger-glow);  border: 1px solid rgba(248,113,113,0.3); color: var(--danger); }
+      .badge-accent  { background: rgba(167,139,250,0.12); border: 1px solid rgba(167,139,250,0.3); color: var(--accent); }
+      .badge-dim     { background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--muted); }
+
+      /* ── JOB CARD (Admin) ── */
+      .job-list { display: flex; flex-direction: column; gap: 12px; }
+      .job-admin-card {
+        background: var(--glass);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px 24px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: all var(--t);
+        cursor: default;
+      }
+      .job-admin-card:hover { border-color: var(--border-glow); }
+      .job-admin-info { flex: 1; min-width: 0; }
+      .job-admin-title {
+        font-family: var(--font-d);
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .job-admin-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+      .job-admin-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+      /* ── APPLICANT TABLE/CARDS ── */
+      .filter-bar {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .filter-bar select, .filter-bar input {
+        width: auto;
+        min-width: 140px;
+        font-size: 0.85rem;
+        padding: 8px 12px;
+      }
+      .filter-bar input { flex: 1; min-width: 180px; }
+
+      .applicant-list { display: flex; flex-direction: column; gap: 10px; }
+      .applicant-card {
+        background: var(--glass);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        transition: border-color var(--t);
+      }
+      .applicant-card:hover { border-color: var(--border-glow); }
+      .applicant-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 20px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .applicant-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-d);
+        font-weight: 800;
+        font-size: 1rem;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .applicant-info { flex: 1; min-width: 0; }
+      .applicant-name { font-weight: 700; font-size: 0.95rem; }
+      .applicant-sub { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+      .applicant-score-badge {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 6px 14px;
+        border-radius: var(--radius-sm);
+        font-family: var(--font-d);
+        flex-shrink: 0;
+      }
+      .score-num { font-size: 1.3rem; font-weight: 800; line-height: 1; }
+      .score-label { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; margin-top: 2px; }
+      .score-high { background: var(--success-glow); color: var(--success); border: 1px solid rgba(52,211,153,0.3); }
+      .score-mid  { background: var(--warning-glow); color: var(--warning); border: 1px solid rgba(251,191,36,0.3); }
+      .score-low  { background: var(--danger-glow);  color: var(--danger);  border: 1px solid rgba(248,113,113,0.3); }
+      .score-none { background: var(--glass-light); color: var(--muted); border: 1px solid var(--border); }
+      .expand-icon { color: var(--muted); font-size: 1.1rem; transition: transform var(--t); flex-shrink: 0; }
+      .applicant-card.expanded .expand-icon { transform: rotate(180deg); }
+
+      .applicant-body {
+        display: none;
+        padding: 0 20px 20px;
+        border-top: 1px solid var(--border);
+        margin-top: 0;
+      }
+      .applicant-card.expanded .applicant-body { display: block; }
+
+      /* ── AI EVALUATION PANEL ── */
+      .ai-panel {
+        background: rgba(79,163,232,0.04);
+        border: 1px solid rgba(79,163,232,0.15);
+        border-radius: var(--radius);
+        padding: 18px;
+        margin: 16px 0;
+      }
+      .ai-panel-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--primary);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .ai-score-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+      .ai-big-score {
+        font-family: var(--font-d);
+        font-size: 3rem;
+        font-weight: 900;
+        line-height: 1;
+      }
+      .ai-big-score.high { color: var(--success); }
+      .ai-big-score.mid  { color: var(--warning); }
+      .ai-big-score.low  { color: var(--danger); }
+      .ai-score-meta { font-size: 0.85rem; color: var(--muted); }
+      .ai-score-meta strong { color: var(--text); }
+      .ai-section-label {
+        font-size: 0.73rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--muted);
+        margin-bottom: 8px;
+        margin-top: 14px;
+      }
+      .pros-cons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+      .pros-box, .cons-box {
+        border-radius: var(--radius-sm);
+        padding: 12px 14px;
+      }
+      .pros-box { background: var(--success-glow); border: 1px solid rgba(52,211,153,0.2); }
+      .cons-box { background: var(--danger-glow);  border: 1px solid rgba(248,113,113,0.2); }
+      .pros-cons-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+      .pros-box .pros-cons-title { color: var(--success); }
+      .cons-box .pros-cons-title { color: var(--danger); }
+      .pros-cons-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+      .pros-cons-list li { font-size: 0.83rem; color: var(--text); line-height: 1.5; }
+      .pros-cons-list li::before { margin-right: 6px; }
+      .pros-box .pros-cons-list li::before { content: "✓"; color: var(--success); }
+      .cons-box .pros-cons-list li::before { content: "✗"; color: var(--danger); }
+
+      .skills-grid { display: flex; flex-direction: column; gap: 6px; }
+      .skill-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 0.83rem;
+        padding: 8px 10px;
+        border-radius: 6px;
+        background: var(--glass-light);
+      }
+      .skill-name { font-weight: 600; color: var(--primary); min-width: 100px; flex-shrink: 0; }
+      .skill-detail { color: var(--muted); line-height: 1.45; }
+
+      /* ── ADMIN ACTIONS PANEL ── */
+      .admin-actions-panel {
+        background: rgba(167,139,250,0.04);
+        border: 1px solid rgba(167,139,250,0.15);
+        border-radius: var(--radius);
+        padding: 18px;
+        margin-top: 14px;
+      }
+      .admin-actions-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--accent);
+        margin-bottom: 14px;
+      }
+      .admin-action-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; align-items: center; }
+
+      /* ── MODAL ── */
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.75);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .modal.open { display: flex; animation: fadeBlur 0.22s ease; }
+      @keyframes fadeBlur { from { opacity: 0; } to { opacity: 1; } }
+      .modal-box {
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        width: min(680px, 100%);
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 32px;
+        box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+        animation: slideUp 0.28s cubic-bezier(0.4,0,0.2,1);
+      }
+      @keyframes slideUp { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+      .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+      .modal-title { font-family: var(--font-d); font-size: 1.3rem; font-weight: 700; line-height: 1.3; padding-right: 16px; }
+      .modal-close {
+        background: var(--glass-light); border: 1px solid var(--border); color: var(--muted);
+        width: 34px; height: 34px; border-radius: 50%; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;
+        transition: var(--t);
+      }
+      .modal-close:hover { background: var(--danger-glow); border-color: var(--danger); color: var(--danger); }
+      .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+
+      /* ── TOAST ── */
+      #toast-container {
+        position: fixed; bottom: 24px; right: 24px;
+        z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+      }
+      .toast-item {
+        display: flex; align-items: center; gap: 12px;
+        background: var(--bg-2); border: 1px solid var(--border);
+        border-radius: 10px; padding: 13px 18px;
+        min-width: 260px; max-width: 380px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        animation: toastIn 0.28s ease; pointer-events: all; font-size: 0.88rem;
+      }
+      @keyframes toastIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+      .toast-item.success { border-left: 3px solid var(--success); }
+      .toast-item.danger  { border-left: 3px solid var(--danger); }
+      .toast-item.warning { border-left: 3px solid var(--warning); }
+      .toast-item.info    { border-left: 3px solid var(--primary); }
+
+      /* ── MISC ── */
+      .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+      .text-muted { color: var(--muted); }
+      .text-dim   { color: var(--dim); }
+      .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+      .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 14px; }
+      .skeleton {
+        background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 8px;
+      }
+      @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+      @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 768px) {
+        .sidebar { transform: translateX(-100%); }
+        .main { margin-left: 0; }
+        .topbar { padding: 0 16px; }
+        .content { padding: 16px; }
+        .form-row, .form-row-3 { grid-template-columns: 1fr; }
+        .pros-cons-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <a class="sidebar-logo" href="/ui/">HUNTLY</a>
+      <span class="sidebar-subtitle">Recruiter Dashboard</span>
+      <div class="nav-section-label">Quản lý</div>
+      <button class="nav-item active" id="navJobs" onclick="switchTab('jobs')">
+        <span class="nav-icon">💼</span> Tin tuyển dụng
+      </button>
+      <button class="nav-item" id="navApplicants" onclick="switchTab('applicants')">
+        <span class="nav-icon">👥</span> Hồ sơ ứng tuyển
+      </button>
+      <button class="nav-item" id="navAnalytics" onclick="switchTab('analytics')">
+        <span class="nav-icon">📊</span> Thống kê & Báo cáo
+      </button>
+
+
+      <div class="nav-spacer"></div>
+      <div class="nav-bottom">
+        <a href="/ui/" class="nav-item">
+          <span class="nav-icon">🌐</span> Xem trang ứng viên
+        </a>
+        <a href="/docs" class="nav-item" target="_blank">
+          <span class="nav-icon">📖</span> API Docs
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <!-- TOPBAR -->
+      <div class="topbar">
+        <div class="topbar-title" id="topbarTitle">💼 Quản lý tin tuyển dụng</div>
+        <div class="topbar-actions">
+          <button class="btn btn-primary" id="btnTopbarAction" onclick="openCreateJobModal()">
+            ＋ Tạo tin mới
+          </button>
+        </div>
+      </div>
+
+      <div class="content">
+
+        <!-- ══ TAB: JOBS ══ -->
+        <div id="tabJobs">
+          <!-- OVERALL STATS -->
+          <div class="stats-grid" id="overallStats">
+            <div class="stat-card">
+              <div class="stat-label">Tổng tin tuyển dụng</div>
+              <div class="stat-value primary" id="statTotalJobs">—</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Đang hoạt động</div>
+              <div class="stat-value success" id="statActiveJobs">—</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Tổng hồ sơ</div>
+              <div class="stat-value warning" id="statTotalApps">—</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Đã AI review</div>
+              <div class="stat-value accent" id="statAIReviewed">—</div>
+            </div>
+          </div>
+
+          <div class="section-header">
+            <div class="section-title">Danh sách tin tuyển dụng</div>
+            <div style="display:flex;gap:10px;">
+              <input type="text" id="searchJobsAdmin" placeholder="🔍 Tìm vị trí..." style="width:200px;font-size:0.85rem;padding:8px 12px;" />
+              <select id="filterJobStatus" style="width:140px;font-size:0.85rem;padding:8px 12px;" onchange="loadJobs()">
+                <option value="">Tất cả trạng thái</option>
+                <option value="active">Đang tuyển</option>
+                <option value="closed">Đã đóng</option>
+                <option value="draft">Bản nháp</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="job-list" id="jobList">
+            <div class="applicant-card skeleton" style="height:80px;"></div>
+            <div class="applicant-card skeleton" style="height:80px;"></div>
+          </div>
+        </div>
+
+        <!-- ══ TAB: APPLICANTS ══ -->
+        <div id="tabApplicants" style="display:none;">
+          <div class="section-header">
+            <div>
+              <div class="section-title" id="applicantsTitle">Hồ sơ ứng tuyển</div>
+              <div style="font-size:0.85rem;color:var(--muted);margin-top:4px;" id="applicantsSubtitle"></div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="switchTab('jobs')">← Quay lại danh sách job</button>
+          </div>
+
+          <!-- Per-job stats -->
+          <div class="stats-grid" id="jobStats" style="display:none;"></div>
+
+          <!-- Filters -->
+          <div class="filter-bar">
+            <input type="text" id="searchApplicants" placeholder="🔍 Tìm tên, email..." />
+            <select id="filterAppStatus" onchange="applyFilters()">
+              <option value="">Tất cả trạng thái xử lý</option>
+              <option value="submitted">Mới nộp (submitted)</option>
+              <option value="ai_reviewed">Đã AI review</option>
+            </select>
+            <select id="filterReviewStatus" onchange="applyFilters()">
+              <option value="">Tất cả quyết định</option>
+              <option value="new">Chưa xem</option>
+              <option value="shortlist">Shortlist</option>
+              <option value="interview">Phỏng vấn</option>
+              <option value="suitable">Phù hợp</option>
+              <option value="not_suitable">Không phù hợp</option>
+              <option value="rejected">Loại</option>
+            </select>
+            <select id="sortApplicants" onchange="applyFilters()">
+              <option value="created_at|desc">Mới nhất trước</option>
+              <option value="created_at|asc">Cũ nhất trước</option>
+              <option value="full_name|asc">Tên A → Z</option>
+              <option value="ai_score|desc">Điểm AI cao nhất</option>
+            </select>
+          </div>
+
+          <div class="applicant-list" id="applicantList">
+            <div class="applicant-card skeleton" style="height:72px;"></div>
+            <div class="applicant-card skeleton" style="height:72px;"></div>
+          </div>
+        </div>
+
+        <!-- ══ TAB: ANALYTICS ══ -->
+        <div id="tabAnalytics" style="display:none;">
+          <div class="section-header">
+            <div>
+              <div class="section-title">📊 Thống kê & Báo cáo Tuyển dụng</div>
+              <div style="font-size:0.85rem;color:var(--muted);margin-top:4px;">Tổng quan lượt truy cập biểu mẫu, số đơn nộp, tỷ lệ chuyển đổi và kết quả tuyển dụng</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="loadAnalyticsSummary()">🔄 Cập nhật dữ liệu</button>
+          </div>
+
+          <!-- ANALYTICS SUMMARY KPI GRID -->
+          <div class="stats-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+            <div class="stat-card">
+              <div class="stat-label">👁️ Tổng lượt truy cập</div>
+              <div class="stat-value primary" id="analyticsTotalViews">—</div>
+              <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">Lượt xem link ứng tuyển</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">📄 CV đã nộp</div>
+              <div class="stat-value warning" id="analyticsTotalApps">—</div>
+              <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">Tổng ứng viên nộp đơn</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">✅ Đã Đạt (Pass)</div>
+              <div class="stat-value success" id="analyticsTotalPass">—</div>
+              <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">Shortlist / Phỏng vấn</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">❌ Đã Loại (Failed)</div>
+              <div class="stat-value danger" id="analyticsTotalFailed">—</div>
+              <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">Từ chối / Khắc nghiệt</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">📈 Tỷ lệ chuyển đổi</div>
+              <div class="stat-value accent" id="analyticsConvRate">—%</div>
+              <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">Tỷ lệ Ứng tuyển / Lượt xem</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">🎯 Tỷ lệ Đạt (Pass Rate)</div>
+              <div class="stat-value success" id="analyticsPassRate">—%</div>
+              <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;">Tỷ lệ Pass / CV nộp</div>
+            </div>
+          </div>
+
+          <!-- TABLE: ANALYTICS PER JOB -->
+          <div style="margin-top:32px;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;">
+            <div class="section-title" style="margin-bottom:16px;">Chi tiết hiệu quả từng vị trí tuyển dụng</div>
+            <div style="overflow-x:auto;">
+              <table style="width:100%;border-collapse:collapse;text-align:left;font-size:0.88rem;">
+                <thead>
+                  <tr style="border-bottom:1px solid var(--border);color:var(--muted);font-size:0.78rem;text-transform:uppercase;">
+                    <th style="padding:12px 16px;">Vị trí tuyển dụng</th>
+                    <th style="padding:12px 16px;">Lượt xem 👁️</th>
+                    <th style="padding:12px 16px;">CV gửi về 📄</th>
+                    <th style="padding:12px 16px;">Pass ✅</th>
+                    <th style="padding:12px 16px;">Failed ❌</th>
+                    <th style="padding:12px 16px;">Chờ duyệt ⏳</th>
+                    <th style="padding:12px 16px;">Tỷ lệ ứng tuyển 📈</th>
+                    <th style="padding:12px 16px;">Tỷ lệ Pass 🎯</th>
+                    <th style="padding:12px 16px;text-align:right;">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="analyticsJobTableBody">
+                  <tr><td colspan="9" style="padding:24px;text-align:center;color:var(--muted);">Đang tải dữ liệu báo cáo...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+
+      </div><!-- /content -->
+    </main>
+
+    <!-- MODAL: CREATE / EDIT JOB -->
+    <div class="modal" id="modalJob">
+      <div class="modal-box">
+        <div class="modal-header">
+          <div class="modal-title" id="jobModalTitle">Tạo tin tuyển dụng mới</div>
+          <button class="modal-close" onclick="closeModal('modalJob')">×</button>
+        </div>
+        <form id="formJob" novalidate>
+          <input type="hidden" id="jobEditId" />
+          <div class="form-group">
+            <label class="form-label">Tên vị trí *</label>
+            <input type="text" id="jobTitle" required placeholder="VD: Senior Python Backend Engineer" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Phòng ban</label>
+              <input type="text" id="jobDept" placeholder="VD: Engineering" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Địa điểm</label>
+              <input type="text" id="jobLocation" placeholder="VD: Hà Nội / Remote" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Loại hình</label>
+              <select id="jobType">
+                <option value="Full-time">Full-time</option>
+                <option value="Part-time">Part-time</option>
+                <option value="Remote">Remote</option>
+                <option value="Contract">Contract</option>
+                <option value="Internship">Internship</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Trạng thái</label>
+              <select id="jobStatus">
+                <option value="active">Đang tuyển</option>
+                <option value="draft">Bản nháp</option>
+                <option value="closed">Đã đóng</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Hạn nộp hồ sơ</label>
+            <input type="date" id="jobDeadline" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mô tả công việc *</label>
+            <textarea id="jobDesc" placeholder="Mô tả chi tiết về công việc, nhiệm vụ, trách nhiệm..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Yêu cầu ứng viên *</label>
+            <textarea id="jobReqs" placeholder="Kỹ năng, kinh nghiệm, bằng cấp yêu cầu..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Quyền lợi / Phúc lợi</label>
+            <textarea id="jobBenefits" placeholder="Lương thưởng, bảo hiểm, nghỉ phép, team building..." style="min-height:70px;"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modalJob')">Hủy</button>
+            <button type="submit" class="btn btn-primary" id="btnSaveJob">Lưu tin tuyển dụng</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container"></div>
+
+    <script>
+      const API = window.location.origin;
+      let allJobs = [];
+      let allApplicants = [];
+      let currentJobId = null;
+      let currentJobName = '';
+
+      /* ══ UTILITIES ══ */
+      function esc(s) {
+        if (!s) return '';
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      }
+
+      function toast(msg, type = 'info') {
+        const ct = document.getElementById('toast-container');
+        const el = document.createElement('div');
+        const icons = { success:'✅', danger:'❌', warning:'⚠️', info:'ℹ️' };
+        el.className = `toast-item ${type}`;
+        el.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+        ct.appendChild(el);
+        setTimeout(() => el.remove(), 4500);
+      }
+
+      function fmtDate(dt) {
+        if (!dt) return '—';
+        return new Date(dt).toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' });
+      }
+
+      function closeModal(id) {
+        document.getElementById(id).classList.remove('open');
+      }
+
+      /* ══ COPY SHARE LINK ══ */
+      function copyJobShareUrl(jobId, title) {
+        // Direct public link for candidate app
+        const shareUrl = `${window.location.origin}/ui/?job_id=${jobId}`;
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          toast(`Đã sao chép link ứng tuyển trực tiếp cho "${title||'Vị trí này'}"!`, 'success');
+        }).catch(() => {
+          toast(`Link ứng tuyển: ${shareUrl}`, 'info');
+        });
+      }
+
+      /* ══ TAB SWITCH ══ */
+      function switchTab(tab) {
+        document.getElementById('tabJobs').style.display = tab === 'jobs' ? '' : 'none';
+        document.getElementById('tabApplicants').style.display = tab === 'applicants' ? '' : 'none';
+        document.getElementById('tabAnalytics').style.display = tab === 'analytics' ? '' : 'none';
+
+        document.getElementById('navJobs').classList.toggle('active', tab === 'jobs');
+        document.getElementById('navApplicants').classList.toggle('active', tab === 'applicants');
+        document.getElementById('navAnalytics').classList.toggle('active', tab === 'analytics');
+
+        if (tab === 'jobs') {
+          document.getElementById('topbarTitle').textContent = '💼 Quản lý tin tuyển dụng';
+          document.getElementById('btnTopbarAction').style.display = '';
+          document.getElementById('btnTopbarAction').textContent = '＋ Tạo tin mới';
+          document.getElementById('btnTopbarAction').onclick = openCreateJobModal;
+        } else if (tab === 'analytics') {
+          document.getElementById('topbarTitle').textContent = '📊 Thống kê & Báo cáo tuyển dụng';
+          document.getElementById('btnTopbarAction').style.display = 'none';
+          loadAnalyticsSummary();
+        } else {
+          document.getElementById('topbarTitle').textContent = `👥 Hồ sơ: ${currentJobName}`;
+          document.getElementById('btnTopbarAction').style.display = 'none';
+        }
+      }
+
+      /* ══ ANALYTICS SUMMARY ══ */
+      async function loadAnalyticsSummary() {
+        try {
+          const res = await fetch(`${API}/api/v1/jobs/analytics/summary`);
+          if (!res.ok) throw new Error('Không tải được dữ liệu báo cáo thống kê');
+          const data = await res.json();
+
+          document.getElementById('analyticsTotalViews').textContent = (data.total_views || 0).toLocaleString();
+          document.getElementById('analyticsTotalApps').textContent = (data.total_applications || 0).toLocaleString();
+          document.getElementById('analyticsTotalPass').textContent = (data.total_pass || 0).toLocaleString();
+          document.getElementById('analyticsTotalFailed').textContent = (data.total_failed || 0).toLocaleString();
+          document.getElementById('analyticsConvRate').textContent = `${data.overall_conversion_rate}%`;
+          document.getElementById('analyticsPassRate').textContent = `${data.overall_pass_rate}%`;
+
+          const tbody = document.getElementById('analyticsJobTableBody');
+          if (!data.jobs || data.jobs.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="9" style="padding:24px;text-align:center;color:var(--muted);">Chưa có dữ liệu tin tuyển dụng.</td></tr>`;
+            return;
+          }
+
+          tbody.innerHTML = '';
+          data.jobs.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.style.borderBottom = '1px solid var(--border)';
+            tr.innerHTML = `
+              <td style="padding:14px 16px;font-weight:600;">
+                <div style="color:var(--text);">${esc(item.title)}</div>
+                <div style="font-size:0.75rem;color:var(--muted);">${esc(item.department||'Chưa phân loại')}</div>
+              </td>
+              <td style="padding:14px 16px;color:var(--primary);font-weight:700;">👁️ ${item.views_count}</td>
+              <td style="padding:14px 16px;color:var(--warning);font-weight:700;">📄 ${item.total_applications}</td>
+              <td style="padding:14px 16px;color:var(--success);font-weight:700;">✅ ${item.pass_count}</td>
+              <td style="padding:14px 16px;color:var(--danger);font-weight:700;">❌ ${item.failed_count}</td>
+              <td style="padding:14px 16px;color:var(--muted);">⏳ ${item.pending_count}</td>
+              <td style="padding:14px 16px;">
+                <span class="badge badge-primary">${item.conversion_rate}%</span>
+              </td>
+              <td style="padding:14px 16px;">
+                <span class="badge ${item.pass_rate >= 50 ? 'badge-success' : 'badge-warning'}">${item.pass_rate}%</span>
+              </td>
+              <td style="padding:14px 16px;text-align:right;">
+                <button class="btn btn-secondary btn-sm" onclick="copyJobShareUrl(${item.job_id}, '${esc(item.title)}')">🔗 Copy Link</button>
+                <button class="btn btn-secondary btn-sm" onclick="viewApplicants(${item.job_id}, '${esc(item.title)}')">👥 Chi tiết</button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+
+        } catch (e) {
+          toast(e.message, 'danger');
+        }
+      }
+
+      /* ══ OVERALL STATS ══ */
+      async function loadOverallStats() {
+        try {
+          const jobs = allJobs;
+          document.getElementById('statTotalJobs').textContent = jobs.length;
+          document.getElementById('statActiveJobs').textContent = jobs.filter(j => j.status === 'active').length;
+
+          let totalApps = 0, aiReviewed = 0;
+          const limited = jobs.slice(0, 10);
+          const results = await Promise.allSettled(
+            limited.map(j => fetch(`${API}/api/v1/jobs/${j.id}/stats`).then(r => r.json()))
+          );
+          results.forEach(r => {
+            if (r.status === 'fulfilled') {
+              totalApps += r.value.total_applications || 0;
+              aiReviewed += r.value.ai_reviewed || 0;
+            }
+          });
+          document.getElementById('statTotalApps').textContent = totalApps;
+          document.getElementById('statAIReviewed').textContent = aiReviewed;
+        } catch(e) {
+          console.warn('Stats load failed', e);
+        }
+      }
+
+      /* ══ JOBS ══ */
+      async function loadJobs() {
+        const statusFilter = document.getElementById('filterJobStatus').value;
+        const url = statusFilter ? `${API}/api/v1/jobs?status=${statusFilter}` : `${API}/api/v1/jobs`;
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error('Tải danh sách job thất bại');
+          allJobs = await res.json();
+          renderJobs();
+          loadOverallStats();
+        } catch(e) {
+          document.getElementById('jobList').innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>${e.message}</p></div>`;
+        }
+      }
+
+      function renderJobs() {
+        const search = document.getElementById('searchJobsAdmin').value.toLowerCase().trim();
+        const list = document.getElementById('jobList');
+        let filtered = allJobs;
+        if (search) {
+          filtered = allJobs.filter(j =>
+            j.title.toLowerCase().includes(search) ||
+            (j.department||'').toLowerCase().includes(search) ||
+            (j.location||'').toLowerCase().includes(search)
+          );
+        }
+
+        if (filtered.length === 0) {
+          list.innerHTML = `<div class="empty-state"><div class="empty-icon">💼</div><p>Không có tin tuyển dụng nào.</p></div>`;
+          return;
+        }
+
+        list.innerHTML = '';
+        filtered.forEach(job => {
+          const statusBadgeClass = job.status === 'active' ? 'badge-success' : job.status === 'draft' ? 'badge-warning' : 'badge-dim';
+          const statusLabel = { active: 'Đang tuyển', closed: 'Đã đóng', draft: 'Bản nháp' }[job.status] || job.status;
+          const views = job.views_count || 0;
+          const card = document.createElement('div');
+          card.className = 'job-admin-card';
+          card.innerHTML = `
+            <div class="job-admin-info">
+              <div class="job-admin-title">${esc(job.title)}</div>
+              <div class="job-admin-meta">
+                <span class="badge ${statusBadgeClass}">${statusLabel}</span>
+                ${job.department ? `<span class="badge badge-dim">${esc(job.department)}</span>` : ''}
+                ${job.location   ? `<span class="badge badge-dim">📍 ${esc(job.location)}</span>` : ''}
+                ${job.job_type   ? `<span class="badge badge-primary">${esc(job.job_type)}</span>` : ''}
+                <span class="badge badge-dim">📅 ${fmtDate(job.created_at)}</span>
+                <span class="badge badge-dim">👁️ ${views} lượt xem</span>
+                ${job.deadline ? `<span class="badge badge-warning">⏰ Hết hạn: ${fmtDate(job.deadline)}</span>` : ''}
+              </div>
+            </div>
+            <div class="job-admin-actions">
+              <button class="btn btn-secondary btn-sm" onclick="copyJobShareUrl(${job.id}, '${esc(job.title)}')">🔗 Copy Link</button>
+              <button class="btn btn-secondary btn-sm" onclick="viewApplicants(${job.id}, '${esc(job.title)}')">👥 Hồ sơ</button>
+              <button class="btn btn-accent-sm btn-sm" onclick="openEditJobModal(${job.id})">✏️ Sửa</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteJob(${job.id}, '${esc(job.title)}')">🗑️</button>
+            </div>
+          `;
+          list.appendChild(card);
+        });
+      }
+
+
+      document.getElementById('searchJobsAdmin').addEventListener('input', () => renderJobs());
+
+      /* ══ CREATE / EDIT JOB MODAL ══ */
+      function openCreateJobModal() {
+        document.getElementById('jobModalTitle').textContent = 'Tạo tin tuyển dụng mới';
+        document.getElementById('jobEditId').value = '';
+        document.getElementById('formJob').reset();
+        document.getElementById('btnSaveJob').textContent = 'Tạo tin tuyển dụng';
+        document.getElementById('modalJob').classList.add('open');
+      }
+
+      async function openEditJobModal(jobId) {
+        const job = allJobs.find(j => j.id === jobId);
+        if (!job) return;
+        document.getElementById('jobModalTitle').textContent = 'Chỉnh sửa tin tuyển dụng';
+        document.getElementById('jobEditId').value = jobId;
+        document.getElementById('jobTitle').value    = job.title || '';
+        document.getElementById('jobDept').value     = job.department || '';
+        document.getElementById('jobLocation').value = job.location || '';
+        document.getElementById('jobType').value     = job.job_type || 'Full-time';
+        document.getElementById('jobStatus').value   = job.status || 'active';
+        document.getElementById('jobDeadline').value = job.deadline ? job.deadline.substring(0,10) : '';
+        document.getElementById('jobDesc').value     = job.description || '';
+        document.getElementById('jobReqs').value     = job.requirements || '';
+        document.getElementById('jobBenefits').value = job.benefits || '';
+        document.getElementById('btnSaveJob').textContent = 'Cập nhật';
+        document.getElementById('modalJob').classList.add('open');
+      }
+
+      document.getElementById('formJob').addEventListener('submit', async e => {
+        e.preventDefault();
+        const editId = document.getElementById('jobEditId').value;
+        const title = document.getElementById('jobTitle').value.trim();
+        const desc = document.getElementById('jobDesc').value.trim();
+        const reqs = document.getElementById('jobReqs').value.trim();
+
+        if (!title) { toast('Vui lòng nhập tên vị trí.', 'warning'); return; }
+        if (!desc)  { toast('Vui lòng nhập mô tả công việc.', 'warning'); return; }
+        if (!reqs)  { toast('Vui lòng nhập yêu cầu ứng viên.', 'warning'); return; }
+
+        const deadlineVal = document.getElementById('jobDeadline').value;
+        const payload = {
+          title,
+          department:   document.getElementById('jobDept').value.trim() || null,
+          location:     document.getElementById('jobLocation').value.trim() || null,
+          job_type:     document.getElementById('jobType').value,
+          status:       document.getElementById('jobStatus').value,
+          deadline:     deadlineVal ? new Date(deadlineVal).toISOString() : null,
+          description:  desc,
+          requirements: reqs,
+          benefits:     document.getElementById('jobBenefits').value.trim() || null,
+        };
+
+        const btn = document.getElementById('btnSaveJob');
+        btn.disabled = true;
+        btn.textContent = 'Đang lưu...';
+
+        try {
+          const method = editId ? 'PUT' : 'POST';
+          const url = editId ? `${API}/api/v1/jobs/${editId}` : `${API}/api/v1/jobs`;
+          const res = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.detail || 'Lỗi khi lưu tin tuyển dụng');
+          closeModal('modalJob');
+          toast(editId ? 'Cập nhật tin tuyển dụng thành công!' : 'Tạo tin tuyển dụng thành công!', 'success');
+          loadJobs();
+        } catch(err) {
+          toast(err.message, 'danger');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = editId ? 'Cập nhật' : 'Tạo tin tuyển dụng';
+        }
+      });
+
+      async function deleteJob(jobId, title) {
+        if (!confirm(`Xác nhận xóa tin tuyển dụng "${title}"?\nTất cả hồ sơ ứng tuyển sẽ bị xóa theo.`)) return;
+        try {
+          const res = await fetch(`${API}/api/v1/jobs/${jobId}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('Xóa thất bại');
+          toast('Đã xóa tin tuyển dụng.', 'success');
+          loadJobs();
+        } catch(e) {
+          toast(e.message, 'danger');
+        }
+      }
+
+      /* ══ APPLICANTS ══ */
+      async function viewApplicants(jobId, jobName) {
+        currentJobId = jobId;
+        currentJobName = jobName;
+        document.getElementById('applicantsTitle').textContent = `Hồ sơ ứng tuyển: ${jobName}`;
+        document.getElementById('applicantsSubtitle').textContent = 'Đang tải dữ liệu...';
+        switchTab('applicants');
+        await Promise.all([loadJobStats(jobId), loadApplicants()]);
+      }
+
+      async function loadJobStats(jobId) {
+        try {
+          const res = await fetch(`${API}/api/v1/jobs/${jobId}/stats`);
+          if (!res.ok) return;
+          const s = await res.json();
+          const grid = document.getElementById('jobStats');
+          grid.style.display = 'grid';
+          grid.innerHTML = `
+            <div class="stat-card">
+              <div class="stat-label">Tổng hồ sơ</div>
+              <div class="stat-value primary">${s.total_applications}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Mới / Chưa xem</div>
+              <div class="stat-value warning">${s.review_new}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Đã AI review</div>
+              <div class="stat-value accent">${s.ai_reviewed}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Điểm AI trung bình</div>
+              <div class="stat-value ${s.avg_ai_score >= 70 ? 'success' : s.avg_ai_score >= 50 ? 'warning' : 'primary'}">
+                ${s.avg_ai_score !== null ? s.avg_ai_score : '—'}
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Shortlist</div>
+              <div class="stat-value success">${s.review_shortlist}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Phỏng vấn</div>
+              <div class="stat-value accent">${s.review_interview}</div>
+            </div>
+          `;
+        } catch(e) {}
+      }
+
+      async function loadApplicants() {
+        if (!currentJobId) return;
+        const status = document.getElementById('filterAppStatus').value;
+        const review = document.getElementById('filterReviewStatus').value;
+        const sortVal = document.getElementById('sortApplicants').value;
+        const [sortBy, order] = sortVal.split('|');
+
+        let url = `${API}/api/v1/jobs/${currentJobId}/applications?sort_by=${sortBy}&order=${order}`;
+        if (status) url += `&status=${status}`;
+        if (review) url += `&review_status=${review}`;
+
+        document.getElementById('applicantList').innerHTML = `
+          <div class="applicant-card skeleton" style="height:72px;"></div>
+          <div class="applicant-card skeleton" style="height:72px;"></div>
+        `;
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error('Tải hồ sơ thất bại');
+          allApplicants = await res.json();
+          renderApplicants();
+          document.getElementById('applicantsSubtitle').textContent =
+            `${allApplicants.length} hồ sơ – lọc theo bộ lọc hiện tại`;
+        } catch(e) {
+          document.getElementById('applicantList').innerHTML =
+            `<div class="empty-state"><div class="empty-icon">⚠️</div><p>${e.message}</p></div>`;
+        }
+      }
+
+      function applyFilters() { loadApplicants(); }
+
+      document.getElementById('searchApplicants').addEventListener('input', () => {
+        const q = document.getElementById('searchApplicants').value.toLowerCase().trim();
+        renderApplicants(q);
+      });
+
+      function renderApplicants(search = '') {
+        const list = document.getElementById('applicantList');
+        let apps = allApplicants;
+        if (search) {
+          apps = apps.filter(a =>
+            (a.full_name||'').toLowerCase().includes(search) ||
+            (a.email||'').toLowerCase().includes(search)
+          );
+        }
+        if (apps.length === 0) {
+          list.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><p>Không có hồ sơ nào phù hợp với bộ lọc.</p></div>`;
+          return;
+        }
+        list.innerHTML = '';
+        apps.forEach(app => {
+          const card = buildApplicantCard(app);
+          list.appendChild(card);
+        });
+      }
+
+      function getScoreClass(score) {
+        if (score === null || score === undefined) return 'score-none';
+        return score >= 70 ? 'score-high' : score >= 50 ? 'score-mid' : 'score-low';
+      }
+      function getAIBigClass(score) {
+        return score >= 70 ? 'high' : score >= 50 ? 'mid' : 'low';
+      }
+      function getReviewBadge(rs) {
+        const map = {
+          new:         ['badge-dim',     'Chưa xem'],
+          shortlist:   ['badge-primary', 'Shortlist'],
+          interview:   ['badge-accent',  'Phỏng vấn'],
+          suitable:    ['badge-success', 'Phù hợp'],
+          not_suitable:['badge-warning', 'Không phù hợp'],
+          rejected:    ['badge-danger',  'Loại'],
+        };
+        return map[rs] || ['badge-dim', rs || 'Chưa xem'];
+      }
+      function getStatusBadge(s) {
+        return s === 'ai_reviewed'
+          ? ['badge-success', '✅ AI đã review']
+          : ['badge-warning', '⏳ Chờ AI review'];
+      }
+      function initials(name) {
+        if (!name) return '?';
+        return name.trim().split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+      }
+
+      function buildApplicantCard(app) {
+        const card = document.createElement('div');
+        card.className = 'applicant-card';
+        card.id = `appCard_${app.id}`;
+
+        const score = app.ai_score;
+        const scoreClass = getScoreClass(score);
+        const scoreDisplay = score !== null && score !== undefined ? score : '—';
+        const [rvClass, rvLabel] = getReviewBadge(app.review_status);
+        const [stClass, stLabel] = getStatusBadge(app.status);
+
+        card.innerHTML = `
+          <div class="applicant-header" onclick="toggleCard(${app.id})">
+            <div class="applicant-avatar">${initials(app.full_name)}</div>
+            <div class="applicant-info">
+              <div class="applicant-name">${esc(app.full_name || 'Ứng viên')}</div>
+              <div class="applicant-sub">
+                ${esc(app.email||'')} ${app.phone ? '· '+esc(app.phone) : ''} · Nộp: ${fmtDate(app.created_at)}
+              </div>
+              <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">
+                <span class="badge ${stClass}">${stLabel}</span>
+                <span class="badge ${rvClass}">${rvLabel}</span>
+                ${app.ai_fit_status ? `<span class="badge badge-primary">🤖 ${esc(app.ai_fit_status)}</span>` : ''}
+              </div>
+            </div>
+            <div class="applicant-score-badge ${scoreClass}">
+              <div class="score-num">${scoreDisplay}</div>
+              <div class="score-label">AI Score</div>
+            </div>
+            <span class="expand-icon">▾</span>
+          </div>
+          <div class="applicant-body" id="appBody_${app.id}">
+            ${buildApplicantBody(app)}
+          </div>
+        `;
+        return card;
+      }
+
+      function buildApplicantBody(app) {
+        const cvUrl = app.cv_file_path ? `${window.location.origin}/${app.cv_file_path.replace(/\\/g, '/')}` : null;
+
+        // AI Evaluation section
+        let aiSection = '';
+        if (app.ai_evaluation) {
+          const ev = app.ai_evaluation;
+          const score = ev.total_score || app.ai_score || 0;
+          const bigClass = getAIBigClass(score);
+
+          // Skills match
+          let skillsHtml = '';
+          if (ev.skills_match && ev.skills_match.length > 0) {
+            skillsHtml = `
+              <div class="ai-section-label">🔧 Kỹ năng đối chiếu</div>
+              <div class="skills-grid">
+                ${ev.skills_match.map(s => `
+                  <div class="skill-row">
+                    <span class="skill-name">${esc(s.skill || '')}</span>
+                    <span class="skill-detail">${esc(s.detail || '')}</span>
+                  </div>
+                `).join('')}
+              </div>
+            `;
+          }
+
+          // Experience match
+          let expHtml = '';
+          if (ev.experience_match) {
+            expHtml = `
+              <div class="ai-section-label">📅 Kinh nghiệm</div>
+              <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;padding:10px;background:var(--glass-light);border-radius:6px;">${esc(ev.experience_match)}</p>
+            `;
+          }
+
+          // Pros & cons
+          const pros = ev.pros || [];
+          const cons = ev.cons || [];
+          let prosConsHtml = '';
+          if (pros.length > 0 || cons.length > 0) {
+            prosConsHtml = `
+              <div class="ai-section-label">📊 Điểm mạnh & Điểm yếu</div>
+              <div class="pros-cons-grid">
+                <div class="pros-box">
+                  <div class="pros-cons-title">✓ Điểm mạnh</div>
+                  <ul class="pros-cons-list">${pros.map(p => `<li>${esc(p)}</li>`).join('')}</ul>
+                </div>
+                <div class="cons-box">
+                  <div class="pros-cons-title">✗ Điểm yếu</div>
+                  <ul class="pros-cons-list">${cons.map(c => `<li>${esc(c)}</li>`).join('')}</ul>
+                </div>
+              </div>
+            `;
+          }
+
+          aiSection = `
+            <div class="ai-panel">
+              <div class="ai-panel-title">🤖 Đánh giá AI Gemini</div>
+              <div class="ai-score-row">
+                <div class="ai-big-score ${bigClass}">${score}<span style="font-size:1.2rem;font-weight:600;color:var(--muted)">/100</span></div>
+                <div class="ai-score-meta">
+                  <strong>Phân loại:</strong> ${esc(ev.fit_status || app.ai_fit_status || '—')}<br/>
+                  <span style="font-size:0.8rem;">Đánh giá tự động bởi AI Gemini</span>
+                </div>
+              </div>
+              ${skillsHtml}
+              ${expHtml}
+              ${prosConsHtml}
+            </div>
+          `;
+        } else if (app.status === 'submitted') {
+          aiSection = `
+            <div class="ai-panel" style="text-align:center;padding:24px;">
+              <div style="font-size:1.5rem;margin-bottom:10px;animation:spin 2s linear infinite;display:inline-block;">⚙️</div>
+              <div style="color:var(--muted);font-size:0.9rem;">AI đang phân tích CV...</div>
+              <button class="btn btn-secondary btn-sm" style="margin-top:14px;" onclick="triggerManualEval(${app.job_id}, ${app.id})">
+                🔄 Kích hoạt đánh giá AI ngay
+              </button>
+            </div>
+          `;
+        } else {
+          aiSection = `
+            <div class="ai-panel">
+              <div style="color:var(--muted);font-size:0.88rem;">Chưa có dữ liệu đánh giá AI.</div>
+              <button class="btn btn-secondary btn-sm" style="margin-top:12px;" onclick="triggerManualEval(${app.job_id}, ${app.id})">
+                🔄 Đánh giá AI ngay
+              </button>
+            </div>
+          `;
+        }
+
+        // Cover letter
+        const coverHtml = app.cover_letter
+          ? `<div class="ai-section-label" style="margin-top:16px;">✉️ Thư giới thiệu</div>
+             <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;padding:12px;background:var(--glass-light);border-radius:8px;white-space:pre-wrap;">${esc(app.cover_letter)}</p>`
+          : '';
+
+        return `
+          <div style="padding-top:16px;">
+            <!-- CV Download -->
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+              <span style="font-size:0.8rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">📄 File CV:</span>
+              ${cvUrl
+                ? `<a href="${cvUrl}" target="_blank" class="btn btn-secondary btn-sm">⬇️ Tải xuống CV</a>`
+                : `<span style="font-size:0.85rem;color:var(--dim);">Không tìm thấy file</span>`
+              }
+              <button class="btn btn-accent-sm btn-sm" onclick="triggerManualEval(${app.job_id}, ${app.id})" id="reEvalBtn_${app.id}">
+                🔄 Đánh giá AI lại
+              </button>
+            </div>
+
+            ${aiSection}
+            ${coverHtml}
+
+            <!-- Admin Actions -->
+            <div class="admin-actions-panel">
+              <div class="admin-actions-title">✏️ Quyết định tuyển dụng</div>
+              <div class="form-group" style="margin-bottom:10px;">
+                <label class="form-label">Ghi chú Admin</label>
+                <textarea id="notes_${app.id}" placeholder="Ghi chú về ứng viên này..." style="min-height:70px;">${esc(app.admin_notes || '')}</textarea>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <select id="reviewStatus_${app.id}" style="width:auto;min-width:160px;font-size:0.85rem;padding:8px 12px;">
+                  <option value="new"         ${app.review_status==='new'          ?'selected':''}>Chưa xem</option>
+                  <option value="shortlist"   ${app.review_status==='shortlist'    ?'selected':''}>Shortlist</option>
+                  <option value="interview"   ${app.review_status==='interview'    ?'selected':''}>Phỏng vấn</option>
+                  <option value="suitable"    ${app.review_status==='suitable'     ?'selected':''}>Phù hợp</option>
+                  <option value="not_suitable"${app.review_status==='not_suitable' ?'selected':''}>Không phù hợp</option>
+                  <option value="rejected"    ${app.review_status==='rejected'     ?'selected':''}>Loại</option>
+                </select>
+                <button class="btn btn-primary btn-sm" onclick="saveAdminReview(${app.job_id}, ${app.id})">
+                  💾 Lưu
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function toggleCard(appId) {
+        const card = document.getElementById(`appCard_${appId}`);
+        card.classList.toggle('expanded');
+      }
+
+      /* ══ ADMIN REVIEW SAVE ══ */
+      async function saveAdminReview(jobId, appId) {
+        const notes = document.getElementById(`notes_${appId}`).value;
+        const reviewStatus = document.getElementById(`reviewStatus_${appId}`).value;
+        try {
+          const res = await fetch(`${API}/api/v1/jobs/${jobId}/applications/${appId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ admin_notes: notes, review_status: reviewStatus }),
+          });
+          if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.detail || 'Lỗi cập nhật');
+          }
+          const updated = await res.json();
+          toast('Đã lưu quyết định tuyển dụng.', 'success');
+          // Refresh the card badges
+          const idx = allApplicants.findIndex(a => a.id === appId);
+          if (idx !== -1) {
+            allApplicants[idx] = updated;
+            // Re-render the specific card header badges
+            const card = document.getElementById(`appCard_${appId}`);
+            if (card) {
+              const [rvClass, rvLabel] = getReviewBadge(updated.review_status);
+              const [stClass, stLabel] = getStatusBadge(updated.status);
+              // update badges in header
+              const badgesDiv = card.querySelector('.applicant-info div[style]');
+              if (badgesDiv) {
+                badgesDiv.innerHTML = `
+                  <span class="badge ${stClass}">${stLabel}</span>
+                  <span class="badge ${rvClass}">${rvLabel}</span>
+                  ${updated.ai_fit_status ? `<span class="badge badge-primary">🤖 ${esc(updated.ai_fit_status)}</span>` : ''}
+                `;
+              }
+            }
+          }
+        } catch(e) {
+          toast(e.message, 'danger');
+        }
+      }
+
+      /* ══ MANUAL AI EVALUATE ══ */
+      async function triggerManualEval(jobId, appId) {
+        const btn = document.getElementById(`reEvalBtn_${appId}`);
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = '⚙️ Đang phân tích...';
+        }
+        try {
+          const res = await fetch(`${API}/api/v1/jobs/${jobId}/applications/${appId}/evaluate`, {
+            method: 'POST',
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.detail || 'Lỗi đánh giá AI');
+          toast(`✅ AI đánh giá xong! Điểm: ${data.ai_score}/100 – ${data.ai_fit_status}`, 'success');
+
+          // Reload applicants to refresh the card
+          await loadApplicants();
+        } catch(e) {
+          toast(e.message, 'danger');
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = '🔄 Đánh giá AI lại';
+          }
+        }
+      }
+
+      /* ══ MODAL CLICK-OUTSIDE ══ */
+      document.querySelectorAll('.modal').forEach(m => {
+        m.addEventListener('click', e => {
+          if (e.target === m) m.classList.remove('open');
+        });
+      });
+
+      /* ══ INIT ══ */
+      loadJobs();
+    </script>
+  </body>
+</html>

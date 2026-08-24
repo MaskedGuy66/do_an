@@ -1,0 +1,1 @@
+Candidate Name: John Doe. Email: john@example.com. Phone: 0987654321. Experience: 3 years of Python and FastAPI backend development. Skills: Python, FastAPI, Postgres, Docker.

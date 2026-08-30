@@ -1,0 +1,25 @@
+CANDIDATE CURRICULUM VITAE
+===========================
+Name: Alice Perfect 4
+Email: aliceperfect4@example.com
+Phone: +1-555-019-2834
+Address: Seattle, WA
+
+PROFESSIONAL SUMMARY
+Highly skilled and result-oriented professional with 5 years of experience as a Supply Chain Data Analyst.
+Demonstrated expertise in the target industry with a proven track record of successful projects.
+
+TECHNICAL SKILLS
+python, sql, postgresql, mysql, sql server, database, power bi, tableau, excel, dax
+
+WORK EXPERIENCE
+Senior Analyst | TechCorp (2021 - Present)
+- Utilized tools like python, sql, postgresql to analyze complex datasets.
+- Designed and maintained key reporting dashboards using excel, dax.
+- Led data quality audits and optimized data transformation processes.
+- Handled responsibility: Description: what we offer at magna, you can expect an engaging and dynamic environment where you can help to develop industryleading automotive technologies
+- Handled responsibility: as a member of our global team, you can expect exciting, varied responsibilities as well as a wide range of development prospects
+- Handled responsibility: support data management strategy collaborate with the system manager to develop and implement data management strategies tailored to each indirect category manager
+
+EDUCATION
+Thạc sĩ - Graduated with Honors

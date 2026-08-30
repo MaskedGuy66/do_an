@@ -20,7 +20,11 @@ TECH_KEYWORDS = [
     "spark", "pyspark", "databricks", "etl", "elt", "airflow", "kafka", "dax", "vba", "alteryx", "looker",
     "qlik", "tableau", "power bi", "powerbi", "excel", "javascript", "typescript", "react", "node",
     "java", "c#", "go", "linux", "graphql", "api", "backend", "database", "csdl", "hệ thống", "system",
-    "deployment", "devops", "git", "jira", "ssis", "ssrs", "ssas", "sql server"
+    "deployment", "devops", "git", "jira", "ssis", "ssrs", "ssas", "sql server", "r", "dbt", "power query",
+    "google analytics", "vba", "access", "sas", "spss", "stata", "statistics", "data modeling", 
+    "data warehouse", "data governance", "machine learning", "data science", "business intelligence", 
+    "reporting", "analytics", "supply chain", "logistics", "healthcare", "clinical", "finance", "accounting",
+    "operations", "quality assurance"
 ]
 
 SKILL_ALIASES = {
@@ -37,6 +41,7 @@ SKILL_ALIASES = {
     "graphql": ["graphql", "gql"],
     "api": ["api", "rest api", "restful api", "backend api", "web service", "graphql", "microservices"],
     "backend": ["backend", "back-end", "server-side", "server side"],
+    "r": ["r", "r-programming", "r language", "ggplot", "ggplot2", "tidyverse"],
 
     # Databases & SQL
     "sql": ["sql", "t-sql", "tsql", "pl/sql", "plsql", "sqlite"],
@@ -44,8 +49,8 @@ SKILL_ALIASES = {
     "mysql": ["mysql", "sql", "my sql"],
     "oracle": ["oracle", "oracle database", "pl/sql"],
     "sql server": ["sql server", "mssql", "microsoft sql server", "ssis", "ssrs", "ssas"],
-    "snowflake": ["snowflake"],
-    "bigquery": ["bigquery", "google bigquery"],
+    "snowflake": ["snowflake", "snowflake db"],
+    "bigquery": ["bigquery", "google bigquery", "bq"],
     "redshift": ["redshift", "amazon redshift"],
     "mongodb": ["mongodb", "mongo"],
     "nosql": ["nosql", "non-relational database", "document store"],
@@ -53,27 +58,33 @@ SKILL_ALIASES = {
     "database": ["database", "cơ sở dữ liệu", "csdl", "qlcsdl", "sql", "nosql", "datastore", "rdbms", "database management"],
 
     # BI, Visualization & Analytics Tools
-    "power bi": ["power bi", "powerbi", "pbi", "dax", "power query", "power pivot"],
-    "tableau": ["tableau", "tableau desktop", "tableau server", "tableau prep"],
-    "excel": ["excel", "microsoft excel", "vba", "pivot tables", "vlookup", "index match", "advanced excel"],
-    "looker": ["looker", "lookml"],
+    "power bi": ["power bi", "powerbi", "pbi", "dax", "power query", "power pivot", "power bi desktop", "power bi service"],
+    "tableau": ["tableau", "tableau desktop", "tableau server", "tableau prep", "tableau online"],
+    "excel": ["excel", "microsoft excel", "vba", "pivot tables", "vlookup", "index match", "advanced excel", "spreadsheet", "spreadsheets", "google sheets", "google-sheets"],
+    "looker": ["looker", "lookml", "looker studio", "google data studio"],
     "alteryx": ["alteryx"],
     "qlik": ["qlik", "qlikview", "qliksense"],
-    "sas": ["sas", "sas enterprise"],
+    "sas": ["sas", "sas enterprise", "sas programming"],
     "spss": ["spss", "pasw"],
     "stata": ["stata"],
+    "google analytics": ["google analytics", "ga4", "universal analytics"],
+    "vba": ["vba", "visual basic for applications", "excel macro", "excel macros"],
+    "access": ["access", "ms access", "microsoft access"],
+    "power query": ["power query", "m code", "powerquery"],
+    "dax": ["dax", "data analysis expressions"],
+    "dbt": ["dbt", "data build tool"],
 
     # Data Engineering & Infrastructure
-    "etl": ["etl", "elt", "data extraction", "data transformation", "data loading", "ssis", "data pipeline", "data pipelines", "pipeline development"],
+    "etl": ["etl", "elt", "data extraction", "data transformation", "data loading", "ssis", "data pipeline", "data pipelines", "pipeline development", "data integration"],
     "data warehousing": ["data warehouse", "data warehousing", "edw", "enterprise data warehouse", "star schema", "snowflake schema", "data mart"],
-    "data governance": ["data governance", "data stewardship", "data lineage", "data dictionary", "data quality", "data catalog"],
-    "data modeling": ["data modeling", "data model", "dimensional modeling", "er diagram", "er-diagram"],
+    "data governance": ["data governance", "data stewardship", "data lineage", "data dictionary", "data quality", "data catalog", "data standard"],
+    "data modeling": ["data modeling", "data model", "dimensional modeling", "er diagram", "er-diagram", "entity relationship"],
     "data architecture": ["data architecture", "data architect"],
     "azure": ["azure", "azure data factory", "adf", "azure synapse", "azure databricks"],
     "aws": ["aws", "amazon web services", "cloud", "redshift", "s3", "glue", "athena", "lambda"],
     "gcp": ["gcp", "google cloud", "google cloud platform", "bigquery"],
     "hadoop": ["hadoop", "hdfs", "hive", "pig"],
-    "spark": ["spark", "pyspark", "apache spark"],
+    "spark": ["spark", "pyspark", "apache spark", "delta lake"],
     "databricks": ["databricks"],
     "airflow": ["airflow", "apache airflow"],
     "kafka": ["kafka", "apache kafka"],
@@ -83,18 +94,18 @@ SKILL_ALIASES = {
     "system deployment": ["triển khai hệ thống", "deploy hệ thống", "deployment", "devops", "system deployment", "ci/cd"],
 
     # Data Science, AI & Machine Learning
-    "data science": ["data science", "data scientist"],
-    "machine learning": ["machine learning", "ml", "supervised learning", "unsupervised learning", "scikit-learn", "sklearn"],
+    "data science": ["data science", "data scientist", "predictive modeling", "predictive analytics", "r programming", "data mining"],
+    "machine learning": ["machine learning", "ml", "supervised learning", "unsupervised learning", "scikit-learn", "sklearn", "random forest", "xgboost", "linear regression", "clustering"],
     "deep learning": ["deep learning", "dl", "tensorflow", "pytorch", "keras", "neural networks"],
     "ai": ["ai", "artificial intelligence", "genai", "generative ai", "llm", "trí tuệ nhân tạo"],
     "nlp": ["nlp", "natural language processing", "text mining"],
     "predictive modeling": ["predictive modeling", "predictive analytics", "predictive model", "forecasting model"],
-    "statistical analysis": ["statistical analysis", "statistics", "statistical modeling", "hypothesis testing", "regression", "anova"],
+    "statistical analysis": ["statistical analysis", "statistics", "statistical modeling", "hypothesis testing", "regression", "anova", "t-test", "probability", "biostatistics"],
     "forecasting": ["forecasting", "time series", "time-series", "predictive forecasting"],
     "a/b testing": ["a/b testing", "ab testing", "split testing", "hypothesis testing"],
     "segmentation": ["segmentation", "customer segmentation", "clustering"],
     "data mining": ["data mining"],
-    "business intelligence": ["business intelligence", "bi", "bi reporting", "bi dashboard"],
+    "business intelligence": ["business intelligence", "bi", "bi reporting", "bi dashboard", "bi developer"],
     "visualization": ["visualization", "data visualization", "visualizations", "reporting dashboards"],
 
     # Enterprise Software & Tools
@@ -117,7 +128,13 @@ SKILL_ALIASES = {
     "accounting": ["accounting", "kế toán", "finance", "tài chính", "financial analysis", "auditing", "kiểm toán"],
     "customer service": ["customer service", "chăm sóc khách hàng", "cskh", "customer success", "customer support"],
     "crm": ["crm", "customer relationship management", "salesforce", "hubspot"],
-    "erp": ["erp", "enterprise resource planning", "sap", "oracle erp"]
+    "erp": ["erp", "enterprise resource planning", "sap", "oracle erp"],
+
+    # Upgraded Sectors (Supply Chain, Healthcare, Operations, QA)
+    "supply chain": ["supply chain", "logistics", "procurement", "inventory", "distribution", "transportation", "trucking", "shipping", "chuỗi cung ứng", "vận chuyển"],
+    "healthcare": ["healthcare", "clinical", "hospital", "patient", "medical", "y tế", "bệnh viện", "lâm sàng"],
+    "operations": ["operations", "process improvement", "operational efficiency", "six sigma", "lean", "vận hành", "cải tiến quy trình"],
+    "quality assurance": ["quality assurance", "quality analyst", "qa", "qc", "kiểm thử", "chất lượng", "data quality", "data integrity"]
 }
 
 IT_KEYWORDS = [
@@ -130,7 +147,8 @@ IT_KEYWORDS = [
     "data science", "machine learning", "ai", "artificial intelligence", "trí tuệ nhân tạo",
     "power bi", "powerbi", "tableau", "snowflake", "bigquery", "redshift", "etl", "elt", "data warehousing",
     "data governance", "data modeling", "data architecture", "data pipeline", "pyspark", "spark", "hadoop",
-    "databricks", "airflow", "kafka", "looker", "alteryx", "qlik", "sas", "spss", "stata"
+    "databricks", "airflow", "kafka", "looker", "alteryx", "qlik", "sas", "spss", "stata", "r", "dbt",
+    "power query", "dax", "statistics", "data quality"
 ]
 
 BUSINESS_KEYWORDS = [
@@ -142,7 +160,8 @@ BUSINESS_KEYWORDS = [
     "hr", "human resources", "nhân sự", "recruitment", "tuyển dụng", "people analytics",
     "administration", "hành chính", "operations", "vận hành", "crm", "erp", "consultant", "tư vấn",
     "business intelligence", "bi", "reporting", "dashboard", "dashboards", "visualization", "metrics", "kpi", "kpis",
-    "salesforce", "sap", "workday", "hubspot", "epic", "cerner"
+    "salesforce", "sap", "workday", "hubspot", "epic", "cerner", "supply chain", "logistics", "healthcare",
+    "clinical", "compliance", "fraud", "risk", "audit"
 ]
 
 import sqlite3
@@ -559,6 +578,17 @@ def extract_text_from_image(image_path: str) -> str:
 
     api_key = _get_api_key()
     if not api_key:
+        # Check if there is a sidecar text file
+        txt_fallback_path = image_file.with_suffix(image_file.suffix + ".txt")
+        if txt_fallback_path.exists():
+            with open(txt_fallback_path, "r", encoding="utf-8", errors="ignore") as f:
+                return f.read().strip()
+                
+        txt_fallback_path_alt = image_file.with_suffix(".txt")
+        if txt_fallback_path_alt.exists():
+            with open(txt_fallback_path_alt, "r", encoding="utf-8", errors="ignore") as f:
+                return f.read().strip()
+
         raise ValueError("GEMINI_API_KEY hoặc GOOGLE_API_KEY chưa được cấu hình để đọc ảnh bằng Gemini.")
 
     image_bytes = image_file.read_bytes()

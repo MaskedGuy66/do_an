@@ -1,0 +1,21 @@
+CANDIDATE CURRICULUM VITAE
+===========================
+Name: Bob Partial 5
+Email: bobpartial5@example.com
+Phone: +1-555-019-2834
+Address: Seattle, WA
+
+PROFESSIONAL SUMMARY
+Motivated professional with 0 years of experience in data-related tasks and reporting.
+Looking to grow my technical skills in a challenging analytics role.
+
+TECHNICAL SKILLS
+python, sql, postgresql, mysql, snowflake
+
+WORK EXPERIENCE
+Junior Analyst | SmallScale Ltd (2023 - Present)
+- Extracted data and ran regular operational reports in Excel.
+- Helped team members write basic python queries.
+
+EDUCATION
+Bachelor of Science - General Studies

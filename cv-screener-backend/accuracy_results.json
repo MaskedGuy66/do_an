@@ -1,0 +1,111 @@
+{
+  "ocr_cv": {
+    "similarity_pct": 99.4,
+    "keyword_recall_pct": 100.0,
+    "latency_s": 0.02,
+    "pass": true
+  },
+  "ocr_jd": {
+    "similarity_pct": 98.8,
+    "keyword_recall_pct": 100.0,
+    "latency_s": 5.31,
+    "pass": true
+  },
+  "scoring": [
+    {
+      "ctype": "perfect",
+      "ai_score": 85,
+      "ai_status": "Phù hợp",
+      "expected_status": "Phù hợp",
+      "expected_score_range": "68–100",
+      "status_exact": true,
+      "status_lax": true,
+      "score_in_range": true,
+      "latency_s": 14.19,
+      "pros": [
+        "Có kỹ năng quan trọng phù hợp: Microsoft Excel, Power BI, Tableau, Phân tích dữ liệu (Data Analysis), Trực quan hóa dữ liệu (Data Visualization).",
+        "Đáp ứng đủ số năm kinh nghiệm (4 năm so với 1 năm)."
+      ],
+      "cons": []
+    },
+    {
+      "ctype": "partial",
+      "ai_score": 35,
+      "ai_status": "Loại",
+      "expected_status": "Tiềm năng",
+      "expected_score_range": "30–74",
+      "status_exact": false,
+      "status_lax": true,
+      "score_in_range": true,
+      "latency_s": 34.99,
+      "pros": [
+        "Có kỹ năng quan trọng phù hợp: Microsoft Excel, Power BI, Tableau."
+      ],
+      "cons": [
+        "Thiếu các kỹ năng bắt buộc: Phân tích dữ liệu (Data Analysis), Trực quan hóa dữ liệu (Data Visualization), Kỹ năng tư duy phản biện (Critical Thinking).",
+        "Chưa đạt số năm kinh nghiệm tối thiểu 1 năm (phát hiện 0 năm)."
+      ]
+    },
+    {
+      "ctype": "mismatched",
+      "ai_score": 35,
+      "ai_status": "Loại",
+      "expected_status": "Loại",
+      "expected_score_range": "0–39",
+      "status_exact": true,
+      "status_lax": true,
+      "score_in_range": true,
+      "latency_s": 12.13,
+      "pros": [
+        "Đáp ứng đủ số năm kinh nghiệm (2 năm so với 1 năm)."
+      ],
+      "cons": [
+        "Thiếu các kỹ năng bắt buộc: Microsoft Excel, Power BI, Tableau, Phân tích dữ liệu (Data Analysis), Trực quan hóa dữ liệu (Data Visualization)."
+      ]
+    }
+  ],
+  "performance": {
+    "total_api_calls": 6,
+    "steps": [
+      {
+        "section": "A",
+        "step": "CV OCR",
+        "latency_s": 0.02
+      },
+      {
+        "section": "B",
+        "step": "JD OCR",
+        "latency_s": 5.31
+      },
+      {
+        "section": "C",
+        "step": "JD Extract",
+        "latency_s": 10.0
+      },
+      {
+        "section": "C",
+        "step": "Evaluate_perfect",
+        "latency_s": 14.19
+      },
+      {
+        "section": "C",
+        "step": "Evaluate_partial",
+        "latency_s": 34.99
+      },
+      {
+        "section": "C",
+        "step": "Evaluate_mismatched",
+        "latency_s": 12.13
+      }
+    ],
+    "avg_latency_s": 12.77,
+    "max_latency_s": 34.99
+  },
+  "summary": {
+    "test_time": "2026-08-31T03:08:46.340939",
+    "groups_passed": 3,
+    "groups_total": 3,
+    "overall_pass": true,
+    "total_api_calls": 6
+  }
+}

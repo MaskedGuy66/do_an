@@ -395,10 +395,17 @@ def test_full_e2e_flow(mock_key):
     assert res.status_code == 201
     app_id = res.json()["application_id"]
 
-    # 3. Verify application was AI scored (background task runs sync in TestClient)
-    res = client.get(f"/api/v1/jobs/{job_id}/applications/{app_id}")
-    assert res.status_code == 200
-    app_data = res.json()
+    # 3. Verify application was AI scored (background task runs in separate thread)
+    import time
+    app_data = {}
+    for _ in range(50):
+        res = client.get(f"/api/v1/jobs/{job_id}/applications/{app_id}")
+        assert res.status_code == 200
+        app_data = res.json()
+        if app_data["status"] == "ai_reviewed":
+            break
+        time.sleep(0.1)
+        
     assert app_data["status"] == "ai_reviewed"
     assert app_data["ai_score"] is not None
     assert isinstance(app_data["ai_evaluation"], dict)

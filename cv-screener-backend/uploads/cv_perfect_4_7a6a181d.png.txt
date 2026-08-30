@@ -1,0 +1,25 @@
+CANDIDATE CURRICULUM VITAE
+===========================
+Name: Alice Perfect 4
+Email: aliceperfect4@example.com
+Phone: +1-555-019-2834
+Address: Seattle, WA
+
+PROFESSIONAL SUMMARY
+Highly skilled and result-oriented professional with 6 years of experience as a Supply Chain Data Analyst.
+Demonstrated expertise in the target industry with a proven track record of successful projects.
+
+TECHNICAL SKILLS
+Advanced Microsoft Excel, Power BI, DAX, Data Analysis, Spend Analysis, Supply Chain Analytics, Reporting & Dashboard Creation, Python, SQL, Tableau, Procurement Systems, Data Management, ERP Systems (SAP/Oracle)
+
+WORK EXPERIENCE
+Senior Analyst | TechCorp (2021 - Present)
+- Utilized tools like Advanced Microsoft Excel, Power BI, DAX to analyze complex datasets.
+- Designed and maintained key reporting dashboards using Data Management, ERP Systems (SAP/Oracle).
+- Led data quality audits and optimized data transformation processes.
+- Handled responsibility: Duy tr, ti u ha v nng cao hiu sut cc cng c qun l nh cung cp hin ti, bao gm bo co phn tch gi MRO v h thng gsa4i.
+- Handled responsibility: Thu thp, tng hp v phn tch d liu chi tiu gin tip (MRO, thit b, dch v) t cc h thng c lp v t pha nh cung cp  h tr ra quyt nh.
+- Handled responsibility: Hp tc vi Qun l H thng  pht trin v trin khai cc chin lc qun l d liu ph hp cho tng danh mc mua sm gin tip.
+
+EDUCATION
+Cử nhân chuyên ngành Chuỗi cung ứng, Quản trị Kinh doanh, Công nghệ thông tin hoặc các ngành liên quan - Graduated with Honors

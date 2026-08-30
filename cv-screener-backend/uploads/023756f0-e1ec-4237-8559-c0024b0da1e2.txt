@@ -1,0 +1,1 @@
+Candidate Name: John Doe. Email: john@example.com. Phone: 0987654321. Experience: 3 nam kinh nghiem backend Python va FastAPI. Skills: Python, FastAPI, Postgres, Docker, Redis. Education: Dai hoc Cong nghe thong tin.

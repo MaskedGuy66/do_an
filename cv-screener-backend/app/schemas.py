@@ -4,7 +4,7 @@ from datetime import datetime
 
 # Schema bóc tách tiêu chí chi tiết từ JD
 class JDCriteriaSchema(BaseModel):
-    required_skills: List[str] = Field(..., description="Danh sách các kỹ năng kỹ thuật, công nghệ bắt buộc phải có.")
+    required_skills: List[str] = Field(default=[], description="Danh sách các kỹ năng kỹ thuật, công nghệ bắt buộc phải có.")
     preferred_skills: List[str] = Field(default=[], description="Các kỹ năng cộng điểm, ưu tiên (không bắt buộc).")
     min_years_experience: int = Field(default=0, description="Số năm kinh nghiệm tối thiểu yêu cầu. Nếu không đề cập, mặc định là 0.")
     education_requirement: Optional[str] = Field(None, description="Yêu cầu bằng cấp hoặc học vấn (ví dụ: Đại học chuyên ngành CNTT).")

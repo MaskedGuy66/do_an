@@ -1,0 +1,24 @@
+CANDIDATE CURRICULUM VITAE
+===========================
+Name: Alice Perfect 2
+Email: aliceperfect2@example.com
+Phone: +1-555-019-2834
+Address: Seattle, WA
+
+PROFESSIONAL SUMMARY
+Highly skilled and result-oriented professional with 5 years of experience as a Data Reporting Analyst.
+Demonstrated expertise in the target industry with a proven track record of successful projects.
+
+TECHNICAL SKILLS
+python, javascript, java, sql, postgresql, mysql, database, power bi, tableau, excel
+
+WORK EXPERIENCE
+Senior Analyst | TechCorp (2021 - Present)
+- Utilized tools like python, javascript, java to analyze complex datasets.
+- Designed and maintained key reporting dashboards using tableau, excel.
+- Led data quality audits and optimized data transformation processes.
+- Handled responsibility: design and develop dashboards, tools, and systems for reporting data
+- Handled responsibility: training other staff on developing and presenting data contained within the reports, dashboards, and tools
+
+EDUCATION
+Bachelor of Science in Information Technology - Graduated with Honors

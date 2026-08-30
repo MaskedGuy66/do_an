@@ -1,0 +1,25 @@
+CANDIDATE CURRICULUM VITAE
+===========================
+Name: Alice Perfect 5
+Email: aliceperfect5@example.com
+Phone: +1-555-019-2834
+Address: Seattle, WA
+
+PROFESSIONAL SUMMARY
+Highly skilled and result-oriented professional with 4 years of experience as a Associate, Business Analysis.
+Demonstrated expertise in the target industry with a proven track record of successful projects.
+
+TECHNICAL SKILLS
+Python, SQL, Data Modelling, Linux/Bash scripting, Tableau, Snowflake, AWS/Azure, Git/Bitbucket, Splunk/Prometheus/Grafana, Agile/Jira, User Acceptance Testing (UAT), Site Reliability Engineering (SRE), ServiceNow, CI/CD pipelines, Data Pipelines (ETL/ELT), Docker/Kubernetes
+
+WORK EXPERIENCE
+Senior Analyst | TechCorp (2021 - Present)
+- Utilized tools like Python, SQL, Data Modelling to analyze complex datasets.
+- Designed and maintained key reporting dashboards using Data Pipelines (ETL/ELT), Docker/Kubernetes.
+- Led data quality audits and optimized data transformation processes.
+- Handled responsibility: Pht trin cc gii php phn mm k thut v vit m ngun ti u, hiu qu da trn yu cu kinh doanh.
+- Handled responsibility: Phn tch d liu chi tit, xc thc phn mm v thit k quy trnh lm vic (workflows) cho cc ngun d liu mi.
+- Handled responsibility: Phi hp cht ch vi i ng pht trin ni b  gii quyt cc s c sn xut v thc hin cc yu cu nng cp h thng.
+
+EDUCATION
+Thạc sĩ ngành Kỹ thuật, Khoa học Máy tính hoặc các lĩnh vực liên quan - Graduated with Honors

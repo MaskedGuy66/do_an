@@ -349,9 +349,11 @@ def get_job_stats(job_id: int, db: Session = Depends(get_db)):
     pass_statuses = {"shortlist", "interview", "suitable", "accepted"}
     failed_statuses = {"rejected", "not_suitable"}
 
-    pass_c = sum(1 for a in apps if a.review_status in pass_statuses)
-    failed_c = sum(1 for a in apps if a.review_status in failed_statuses)
-    pending_c = total - pass_c - failed_c
+    # Modified: Use AI metrics for true initial value before admin overrides
+    # If admin has reviewed, maybe we still use AI metrics because the user wants "thông số thật sự có ý nghĩa trước khi admin can thiệp"
+    pass_c = sum(1 for a in apps if a.ai_fit_status in ["Phù hợp", "Tiềm năng"])
+    failed_c = sum(1 for a in apps if a.ai_fit_status == "Loại")
+    pending_c = sum(1 for a in apps if not a.ai_fit_status)
 
     views_c = job.views_count or 0
     conv_rate = round((total / views_c * 100), 2) if views_c > 0 else 0.0
@@ -359,6 +361,9 @@ def get_job_stats(job_id: int, db: Session = Depends(get_db)):
 
     scored = [a.ai_score for a in apps if a.ai_score is not None]
     avg_score = round(sum(scored) / len(scored), 1) if scored else None
+    
+    positive_score_count = sum(1 for score in scored if score >= 70)
+    negative_score_count = sum(1 for score in scored if score < 70)
 
     return schemas.JobStatsResponse(
         job_id=job_id,
@@ -379,6 +384,8 @@ def get_job_stats(job_id: int, db: Session = Depends(get_db)):
         conversion_rate=conv_rate,
         pass_rate=p_rate,
         avg_ai_score=avg_score,
+        positive_score_count=positive_score_count,
+        negative_score_count=negative_score_count,
     )
 
 

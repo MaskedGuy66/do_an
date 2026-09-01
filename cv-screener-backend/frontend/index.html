@@ -3,868 +3,605 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HUNTLY – Cơ hội nghề nghiệp & Ứng tuyển</title>
+    <title>HUNTLY — Cơ hội nghề nghiệp &amp; Ứng tuyển</title>
     <meta name="description" content="Tìm kiếm và ứng tuyển các vị trí công việc hấp dẫn. Nộp CV nhanh chóng, nhận phản hồi từ AI ngay lập tức." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <style>
       /* ── DESIGN TOKENS ── */
       :root {
-        --bg:            #06091a;
-        --bg-2:          #0b1124;
-        --glass:         rgba(13, 20, 45, 0.72);
-        --glass-light:   rgba(255,255,255,0.04);
-        --border:        rgba(255,255,255,0.08);
-        --border-glow:   rgba(99,179,255,0.22);
-        --text:          #f0f4ff;
-        --text-muted:    #7a8aaa;
-        --text-dim:      #4a5570;
-        --primary:       #4fa3e8;
-        --primary-2:     #6b8ef5;
-        --primary-glow:  rgba(79,163,232,0.18);
-        --accent:        #a78bfa;
-        --success:       #34d399;
-        --success-glow:  rgba(52,211,153,0.14);
-        --warning:       #fbbf24;
-        --warning-glow:  rgba(251,191,36,0.14);
-        --danger:        #f87171;
-        --danger-glow:   rgba(248,113,113,0.14);
-        --radius:        14px;
-        --radius-sm:     8px;
-        --font-display:  'Outfit', sans-serif;
-        --font-body:     'Inter', sans-serif;
-        --shadow-panel:  0 8px 40px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.05) inset;
-        --transition:    0.22s cubic-bezier(0.4,0,0.2,1);
+        --bg:             #ffffff;
+        --bg-2:           #f6f8fa;
+        --bg-3:           #edf0f3;
+        --border:         #d0d7de;
+        --border-light:   #e8ecf0;
+        --text:           #1c2128;
+        --text-2:         #32383f;
+        --muted:          #656d76;
+        --dim:            #9198a1;
+        --primary:        #1a7f37;
+        --primary-bg:     #dafbe1;
+        --primary-border: #82cf9f;
+        --success:        #1a7f37;
+        --success-bg:     #dafbe1;
+        --success-border: #82cf9f;
+        --warning:        #9a6700;
+        --warning-bg:     #fff8c5;
+        --warning-border: #d4a72c;
+        --danger:         #cf222e;
+        --danger-bg:      #ffebe9;
+        --danger-border:  #ff8182;
+        --accent:         #6e40c9;
+        --accent-bg:      #ededff;
+        --accent-border:  #bba7f8;
+        --radius:         6px;
+        --radius-lg:      10px;
+        --font-serif:     'Times New Roman', Times, serif;
+        --font-sans:      -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+        --shadow-sm:      0 1px 3px rgba(27,31,36,0.12);
+        --shadow-md:      0 4px 12px rgba(27,31,36,0.15);
+        --t:              0.15s ease;
+        --max-w:          1100px;
       }
 
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
       html { scroll-behavior: smooth; }
-
       body {
-        font-family: var(--font-body);
+        font-family: var(--font-sans);
         background: var(--bg);
-        background-image:
-          radial-gradient(ellipse 80% 50% at 50% -20%, rgba(79,163,232,0.12) 0%, transparent 70%),
-          radial-gradient(ellipse 60% 40% at 85% 80%, rgba(167,139,250,0.07) 0%, transparent 60%);
         color: var(--text);
         min-height: 100vh;
-        overflow-x: hidden;
-        line-height: 1.6;
+        font-size: 14px;
+        line-height: 1.5;
       }
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-      /* ── SCROLLBAR ── */
-      ::-webkit-scrollbar { width: 5px; }
-      ::-webkit-scrollbar-track { background: transparent; }
-      ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 9px; }
-
-      /* ── HEADER ── */
-      header {
+      /* ── NAV ── */
+      .nav {
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
         position: sticky;
         top: 0;
         z-index: 100;
-        background: rgba(6,9,26,0.88);
-        backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--border);
-        padding: 0 clamp(20px, 5vw, 64px);
       }
-
-      .header-inner {
-        max-width: 1280px;
+      .nav-inner {
+        max-width: var(--max-w);
         margin: 0 auto;
-        height: 64px;
+        padding: 0 24px;
+        height: 52px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 20px;
+        gap: 16px;
       }
-
-      .logo {
-        font-family: var(--font-display);
-        font-size: 1.6rem;
-        font-weight: 900;
-        background: linear-gradient(135deg, #4fa3e8 0%, #a78bfa 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        letter-spacing: -0.04em;
+      .nav-logo {
+        font-family: var(--font-serif);
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: var(--text);
         text-decoration: none;
+        letter-spacing: -0.01em;
       }
-
-      .header-links {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .header-links a {
-        color: var(--text-muted);
-        font-size: 0.9rem;
-        font-weight: 500;
-        padding: 8px 14px;
-        border-radius: var(--radius-sm);
-        text-decoration: none;
-        transition: var(--transition);
-      }
-      .header-links a:hover { color: var(--text); background: var(--glass-light); }
-
-      .btn-admin-link {
-        background: var(--glass-light) !important;
-        border: 1px solid var(--border) !important;
-        color: var(--text-muted) !important;
-        font-size: 0.82rem !important;
-      }
-      .btn-admin-link:hover {
-        border-color: var(--border-glow) !important;
-        color: var(--primary) !important;
-      }
+      .nav-actions { display: flex; gap: 8px; align-items: center; }
 
       /* ── HERO ── */
       .hero {
-        padding: clamp(48px, 8vh, 100px) clamp(20px, 5vw, 64px) 64px;
+        border-bottom: 1px solid var(--border);
+        padding: 56px 24px 48px;
         text-align: center;
-        max-width: 720px;
-        margin: 0 auto;
+        background: var(--bg-2);
       }
-
-      .hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 6px 16px;
-        background: rgba(79,163,232,0.1);
-        border: 1px solid rgba(79,163,232,0.25);
-        border-radius: 100px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: var(--primary);
-        margin-bottom: 28px;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
+      .hero-title {
+        font-family: var(--font-serif);
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        font-weight: bold;
+        color: var(--text);
+        line-height: 1.25;
+        margin-bottom: 12px;
       }
-      .hero-badge::before { content: "●"; font-size: 0.6em; animation: blink 1.5s infinite; }
-      @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
-
-      .hero h1 {
-        font-family: var(--font-display);
-        font-size: clamp(2.2rem, 5vw, 3.6rem);
-        font-weight: 900;
-        line-height: 1.1;
-        letter-spacing: -0.03em;
-        margin-bottom: 20px;
-        background: linear-gradient(160deg, #f0f4ff 20%, #7ab5e8 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-
-      .hero p {
-        color: var(--text-muted);
-        font-size: 1.1rem;
+      .hero-sub {
+        font-size: 1rem;
+        color: var(--muted);
         max-width: 520px;
-        margin: 0 auto 36px;
+        margin: 0 auto 24px;
+        line-height: 1.6;
       }
-
-      .hero-cta {
+      .search-bar {
         display: flex;
-        gap: 12px;
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-
-      /* ── CONTAINER ── */
-      .container {
-        max-width: 1280px;
+        max-width: 540px;
         margin: 0 auto;
-        padding: 0 clamp(20px, 5vw, 64px) 80px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        background: var(--bg);
+        box-shadow: var(--shadow-sm);
       }
-
-      /* ── SECTION TITLE ── */
-      .section-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 28px;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
-
-      .section-title {
-        font-family: var(--font-display);
-        font-size: 1.5rem;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-      }
-
-      .section-sub {
-        color: var(--text-muted);
+      .search-bar input {
+        flex: 1;
+        border: none;
+        padding: 10px 16px;
+        font-family: var(--font-sans);
         font-size: 0.9rem;
-        margin-top: 4px;
+        color: var(--text);
+        outline: none;
+        background: transparent;
       }
-
-      /* ── GLASS PANEL ── */
-      .panel {
-        background: var(--glass);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 24px;
-        box-shadow: var(--shadow-panel);
-        backdrop-filter: blur(16px);
-        transition: border-color var(--transition), transform var(--transition);
-      }
-      .panel:hover { border-color: var(--border-glow); }
-
-      /* ── JOBS GRID ── */
-      .jobs-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-        gap: 20px;
-      }
-
-      .job-card {
-        background: var(--glass);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 22px;
+      .search-bar input::placeholder { color: var(--dim); }
+      .search-bar button {
+        padding: 10px 18px;
+        background: var(--text);
+        color: var(--bg);
+        border: none;
+        font-family: var(--font-sans);
+        font-size: 0.875rem;
+        font-weight: 600;
         cursor: pointer;
-        transition: all var(--transition);
+        transition: background var(--t);
+      }
+      .search-bar button:hover { background: var(--text-2); }
+
+      /* ── MAIN LAYOUT ── */
+      .page-main {
+        max-width: var(--max-w);
+        margin: 0 auto;
+        padding: 32px 24px;
+      }
+
+      /* ── SECTION HEADER ── */
+      .section-title {
+        font-family: var(--font-serif);
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: var(--text);
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      /* ── JOB CARDS ── */
+      .jobs-grid {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        min-height: 210px;
-        position: relative;
-        overflow: hidden;
+        gap: 10px;
       }
-
-      .job-card::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
-        opacity: 0;
-        transition: opacity var(--transition);
+      .job-card {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 18px 20px;
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        transition: border-color var(--t), box-shadow var(--t);
+        cursor: default;
       }
-      .job-card:hover {
-        border-color: var(--border-glow);
-        transform: translateY(-3px);
-        box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(99,179,255,0.08);
+      .job-card:hover { border-color: var(--dim); box-shadow: var(--shadow-sm); }
+      .job-card-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius);
+        background: var(--bg-3);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        margin-top: 2px;
       }
-      .job-card:hover::before { opacity: 1; }
-
-      .job-title-text {
-        font-family: var(--font-display);
-        font-size: 1.15rem;
-        font-weight: 700;
-        margin-bottom: 10px;
-        line-height: 1.3;
+      .job-card-body { flex: 1; min-width: 0; }
+      .job-card-title {
+        font-family: var(--font-serif);
+        font-size: 1.05rem;
+        font-weight: bold;
+        color: var(--text);
+        margin-bottom: 5px;
       }
-
-      .job-meta {
+      .job-card-meta {
         display: flex;
         flex-wrap: wrap;
         gap: 6px;
-        margin-bottom: 14px;
+        margin-bottom: 8px;
       }
-
-      .badge {
-        font-size: 0.72rem;
-        font-weight: 600;
-        padding: 3px 10px;
-        border-radius: 100px;
-        background: rgba(255,255,255,0.06);
-        border: 1px solid var(--border);
-        color: var(--text-muted);
-        letter-spacing: 0.02em;
-      }
-      .badge-primary { background: rgba(79,163,232,0.12); border-color: rgba(79,163,232,0.3); color: var(--primary); }
-      .badge-success { background: var(--success-glow); border-color: rgba(52,211,153,0.3); color: var(--success); }
-      .badge-warning { background: var(--warning-glow); border-color: rgba(251,191,36,0.3); color: var(--warning); }
-      .badge-danger  { background: var(--danger-glow);  border-color: rgba(248,113,113,0.3); color: var(--danger); }
-      .badge-accent  { background: rgba(167,139,250,0.12); border-color: rgba(167,139,250,0.3); color: var(--accent); }
-
-      .job-desc-preview {
-        color: var(--text-muted);
-        font-size: 0.87rem;
-        line-height: 1.55;
-        margin-bottom: 18px;
+      .job-card-desc {
+        font-size: 0.83rem;
+        color: var(--muted);
+        line-height: 1.5;
         display: -webkit-box;
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
       }
+      .job-card-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+
+      /* ── BADGE ── */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-size: 0.72rem;
+        font-weight: 500;
+        white-space: nowrap;
+        border: 1px solid transparent;
+      }
+      .badge-primary { background: var(--primary-bg); border-color: var(--primary-border); color: var(--primary); }
+      .badge-success { background: var(--success-bg); border-color: var(--success-border); color: var(--success); }
+      .badge-warning { background: var(--warning-bg); border-color: var(--warning-border); color: var(--warning); }
+      .badge-danger  { background: var(--danger-bg);  border-color: var(--danger-border);  color: var(--danger); }
+      .badge-accent  { background: var(--accent-bg);  border-color: var(--accent-border);  color: var(--accent); }
+      .badge-dim     { background: var(--bg-2); border-color: var(--border); color: var(--muted); }
 
       /* ── BUTTONS ── */
       .btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        font-family: var(--font-body);
-        font-weight: 600;
-        font-size: 0.92rem;
-        padding: 11px 22px;
-        border-radius: var(--radius-sm);
-        cursor: pointer;
-        transition: all var(--transition);
-        border: none;
-        text-decoration: none;
-        white-space: nowrap;
-      }
-
-      .btn-primary {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
-        color: #fff;
-        box-shadow: 0 4px 16px rgba(79,163,232,0.3);
-      }
-      .btn-primary:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 8px 24px rgba(79,163,232,0.4);
-        filter: brightness(1.08);
-      }
-      .btn-primary:active { transform: translateY(0); }
-
-      .btn-secondary {
-        background: var(--glass-light);
-        border: 1px solid var(--border);
-        color: var(--text);
-      }
-      .btn-secondary:hover {
-        background: rgba(255,255,255,0.08);
-        border-color: var(--border-glow);
-      }
-
-      .btn-outline {
-        background: transparent;
-        border: 1px solid rgba(79,163,232,0.35);
-        color: var(--primary);
-      }
-      .btn-outline:hover {
-        background: var(--primary-glow);
-        border-color: var(--primary);
-      }
-
-      .btn-full { width: 100%; }
-      .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none !important; }
-
-      /* ── FORM ── */
-      .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        margin-bottom: 18px;
-      }
-
-      label {
-        font-size: 0.83rem;
-        font-weight: 600;
-        color: var(--text-muted);
-        letter-spacing: 0.03em;
-        text-transform: uppercase;
-      }
-
-      input[type="text"],
-      input[type="email"],
-      textarea,
-      select {
-        background: rgba(6,9,26,0.7);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-sm);
-        padding: 12px 16px;
-        color: var(--text);
-        font-family: var(--font-body);
-        font-size: 0.95rem;
-        outline: none;
-        transition: all var(--transition);
-        width: 100%;
-      }
-      input:focus, textarea:focus, select:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px var(--primary-glow);
-      }
-      input::placeholder, textarea::placeholder { color: var(--text-dim); }
-      textarea { min-height: 110px; resize: vertical; }
-
-      .form-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-      }
-      @media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } }
-
-      /* ── FILE UPLOAD ── */
-      .file-drop-zone {
-        border: 2px dashed var(--border);
+        gap: 6px;
+        font-family: var(--font-sans);
+        font-weight: 500;
+        font-size: 0.875rem;
+        padding: 7px 14px;
         border-radius: var(--radius);
-        padding: 36px 24px;
-        text-align: center;
         cursor: pointer;
-        transition: all var(--transition);
-        background: rgba(79,163,232,0.02);
-        position: relative;
+        transition: all var(--t);
+        border: 1px solid var(--border);
+        background: var(--bg-2);
+        color: var(--text);
+        white-space: nowrap;
+        text-decoration: none;
       }
-      .file-drop-zone:hover, .file-drop-zone.drag-over {
-        border-color: var(--primary);
-        background: rgba(79,163,232,0.06);
+      .btn:hover { background: var(--bg-3); border-color: var(--dim); }
+      .btn-primary {
+        background: var(--text);
+        color: var(--bg);
+        border-color: var(--text);
       }
-      .file-drop-zone input[type="file"] {
-        position: absolute;
-        inset: 0;
-        opacity: 0;
-        cursor: pointer;
-        width: 100%;
-        height: 100%;
-      }
-      .file-drop-icon {
-        width: 48px;
-        height: 48px;
-        margin: 0 auto 14px;
-        color: var(--primary);
-        opacity: 0.7;
-      }
-      .file-drop-label {
-        font-weight: 600;
-        font-size: 0.95rem;
-        margin-bottom: 6px;
-        display: block;
-      }
-      .file-drop-hint {
-        font-size: 0.8rem;
-        color: var(--text-dim);
-      }
+      .btn-primary:hover { background: var(--text-2); border-color: var(--text-2); }
+      .btn-sm { padding: 5px 12px; font-size: 0.8rem; }
+      .btn-full { width: 100%; }
+      .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
       /* ── MODAL ── */
       .modal {
         display: none;
         position: fixed;
         inset: 0;
-        background: rgba(0,0,0,0.75);
-        backdrop-filter: blur(10px);
+        background: rgba(0,0,0,0.4);
         z-index: 1000;
-        align-items: center;
+        align-items: flex-start;
         justify-content: center;
-        padding: 20px;
-      }
-      .modal.open {
-        display: flex;
-        animation: fadeBlur 0.25s ease;
-      }
-      @keyframes fadeBlur {
-        from { opacity: 0; }
-        to   { opacity: 1; }
-      }
-
-      .modal-box {
-        background: var(--bg-2);
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        width: min(620px, 100%);
-        max-height: 90vh;
+        padding: 40px 16px;
         overflow-y: auto;
-        padding: 32px;
-        box-shadow: 0 30px 80px rgba(0,0,0,0.6);
-        animation: slideUp 0.3s cubic-bezier(0.4,0,0.2,1);
       }
-      @keyframes slideUp {
-        from { transform: translateY(24px); opacity: 0; }
-        to   { transform: translateY(0);    opacity: 1; }
+      .modal.open { display: flex; animation: fadeIn 0.18s ease; }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      .modal-box {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        width: min(680px, 100%);
+        padding: 24px;
+        box-shadow: var(--shadow-md);
+        animation: slideUp 0.2s ease;
+        margin: auto;
       }
-
+      @keyframes slideUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
       .modal-header {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        margin-bottom: 26px;
+        margin-bottom: 18px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--border);
       }
-      .modal-title {
-        font-family: var(--font-display);
-        font-size: 1.3rem;
-        font-weight: 700;
-        line-height: 1.3;
-        padding-right: 16px;
-      }
+      .modal-title { font-family: var(--font-serif); font-size: 1.2rem; font-weight: bold; color: var(--text); padding-right: 12px; }
       .modal-close {
-        background: var(--glass-light);
-        border: 1px solid var(--border);
-        color: var(--text-muted);
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
-        flex-shrink: 0;
-        transition: var(--transition);
+        background: none; border: 1px solid var(--border); color: var(--muted);
+        width: 28px; height: 28px; border-radius: var(--radius); cursor: pointer;
+        display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
+        transition: var(--t);
       }
-      .modal-close:hover { background: var(--danger-glow); border-color: var(--danger); color: var(--danger); }
-
-      .modal-footer {
-        display: flex;
-        justify-content: flex-end;
-        gap: 12px;
-        margin-top: 26px;
-        padding-top: 22px;
-        border-top: 1px solid var(--border);
+      .modal-close:hover { background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger); }
+      .modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
+      .modal-section {
+        margin-bottom: 16px;
       }
-
-      /* ── JOB DETAIL MODAL ── */
-      .jd-chip-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 20px;
-      }
-      .jd-section-label {
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: var(--text-muted);
+      .modal-section-title {
+        font-family: var(--font-serif);
+        font-size: 1rem;
+        font-weight: bold;
+        color: var(--text);
         margin-bottom: 8px;
-        display: block;
+        padding-bottom: 6px;
+        border-bottom: 1px solid var(--border-light);
       }
-      .jd-divider {
-        border: none;
-        border-top: 1px solid var(--border);
-        margin: 18px 0;
-      }
-      .jd-body {
-        color: var(--text-muted);
-        font-size: 0.92rem;
-        line-height: 1.65;
+      .modal-text {
+        font-size: 0.875rem;
+        color: var(--text-2);
+        line-height: 1.6;
         white-space: pre-wrap;
       }
 
+      /* ── FORM ── */
+      .form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+      label.form-label { font-size: 0.8rem; font-weight: 600; color: var(--text); }
+      input[type="text"], input[type="email"], input[type="tel"],
+      textarea, select {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 7px 10px;
+        color: var(--text);
+        font-family: var(--font-sans);
+        font-size: 0.875rem;
+        outline: none;
+        transition: border-color var(--t), box-shadow var(--t);
+        width: 100%;
+      }
+      input:focus, textarea:focus, select:focus {
+        border-color: #0969da;
+        box-shadow: 0 0 0 3px rgba(9,105,218,0.15);
+      }
+      input::placeholder, textarea::placeholder { color: var(--dim); }
+      textarea { min-height: 80px; resize: vertical; }
+      .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+      /* ── FILE UPLOAD ── */
+      .file-drop-zone {
+        border: 1px dashed var(--border);
+        border-radius: var(--radius-lg);
+        padding: 24px 16px;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color var(--t), background var(--t);
+        background: var(--bg-2);
+      }
+      .file-drop-zone:hover, .file-drop-zone.drag-over {
+        border-color: var(--dim);
+        background: var(--bg-3);
+      }
+      .file-drop-icon { font-size: 1.6rem; margin-bottom: 6px; }
+      #fileDropLabel { font-size: 0.875rem; color: var(--muted); }
+
       /* ── TOAST ── */
       #toast-container {
-        position: fixed;
-        bottom: 24px;
-        right: 24px;
-        z-index: 9999;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        pointer-events: none;
+        position: fixed; bottom: 20px; right: 20px;
+        z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none;
       }
       .toast-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        background: var(--bg-2);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 14px 18px;
-        min-width: 280px;
-        max-width: 380px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-        animation: toastSlide 0.3s ease;
-        pointer-events: all;
-        font-size: 0.9rem;
+        display: flex; align-items: center; gap: 10px;
+        background: var(--text); color: var(--bg);
+        border-radius: var(--radius); padding: 10px 14px;
+        min-width: 240px; max-width: 360px;
+        box-shadow: var(--shadow-md);
+        animation: toastIn 0.22s ease; pointer-events: all; font-size: 0.85rem;
       }
-      @keyframes toastSlide {
-        from { transform: translateX(120%); opacity: 0; }
-        to   { transform: translateX(0);    opacity: 1; }
-      }
-      .toast-item.success { border-left: 3px solid var(--success); }
-      .toast-item.danger  { border-left: 3px solid var(--danger);  }
-      .toast-item.warning { border-left: 3px solid var(--warning); }
-
-      /* ── SUCCESS CARD ── */
-      .success-card {
-        text-align: center;
-        padding: 40px 24px;
-      }
-      .success-icon {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        background: var(--success-glow);
-        border: 2px solid rgba(52,211,153,0.4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8rem;
-        margin: 0 auto 20px;
-      }
-      .score-pill {
-        display: inline-block;
-        padding: 6px 18px;
-        border-radius: 100px;
-        font-weight: 700;
-        font-size: 1.1rem;
-        margin: 12px 0;
-      }
-      .score-pill.high    { background: var(--success-glow); color: var(--success); border: 1px solid rgba(52,211,153,0.3); }
-      .score-pill.medium  { background: var(--warning-glow); color: var(--warning); border: 1px solid rgba(251,191,36,0.3); }
-      .score-pill.low     { background: var(--danger-glow);  color: var(--danger);  border: 1px solid rgba(248,113,113,0.3); }
+      @keyframes toastIn { from { transform: translateX(110%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+      .toast-item.success { background: var(--success); }
+      .toast-item.danger  { background: var(--danger); }
+      .toast-item.warning { background: var(--warning); color: var(--text); }
 
       /* ── EMPTY STATE ── */
-      .empty-state {
-        text-align: center;
-        padding: 60px 24px;
-        color: var(--text-dim);
-      }
-      .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 16px; }
-      .empty-state p { font-size: 0.95rem; line-height: 1.6; }
+      .empty-state { text-align: center; padding: 48px 20px; color: var(--muted); }
+      .empty-state .empty-icon { font-size: 2rem; margin-bottom: 10px; }
 
-      /* ── LOADING SKELETON ── */
+      /* ── SKELETON ── */
       .skeleton {
-        background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+        background: linear-gradient(90deg, var(--bg-2) 25%, var(--bg-3) 50%, var(--bg-2) 75%);
         background-size: 200% 100%;
-        animation: shimmer 1.5s infinite;
-        border-radius: 8px;
+        animation: shimmer 1.4s infinite;
+        border-radius: var(--radius);
       }
       @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
       @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-      /* ── RESPONSIVE ── */
-      @media (max-width: 700px) {
-        .hero h1 { font-size: 2rem; }
-        .jobs-grid { grid-template-columns: 1fr; }
-        .modal-box { padding: 22px; }
+      /* ── FOOTER ── */
+      .footer {
+        border-top: 1px solid var(--border);
+        background: var(--bg-2);
+        padding: 20px 24px;
+        text-align: center;
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin-top: 40px;
+      }
+
+      @media (max-width: 640px) {
+        .hero { padding: 36px 16px 32px; }
+        .page-main { padding: 20px 12px; }
+        .form-row { grid-template-columns: 1fr; }
+        .job-card { flex-direction: column; gap: 10px; }
+        .job-card-icon { display: none; }
       }
     </style>
   </head>
   <body>
 
-    <!-- HEADER -->
-    <header>
-      <div class="header-inner">
-        <a class="logo" href="/ui/">HUNTLY</a>
-        <nav class="header-links">
-          <a href="#jobs">Vị trí tuyển dụng</a>
-          <a href="/admin/" class="btn-admin-link">🔐 Nhà tuyển dụng</a>
-        </nav>
+    <!-- NAV -->
+    <nav class="nav">
+      <div class="nav-inner">
+        <a class="nav-logo" href="/ui/">HUNTLY</a>
+        <div class="nav-actions">
+          <a href="/admin/" class="btn btn-sm">Đăng nhập HR</a>
+        </div>
       </div>
-    </header>
+    </nav>
 
     <!-- HERO -->
     <section class="hero">
-      <div class="hero-badge">Đang tuyển dụng</div>
-      <h1>Cơ hội nghề nghiệp dành cho bạn</h1>
-      <p>Khám phá các vị trí đang mở. Nộp CV ngay – AI sẽ phân tích và phản hồi kết quả trong vài giây.</p>
-      <div class="hero-cta">
-        <a href="#jobs" class="btn btn-primary">Xem việc làm</a>
+      <h1 class="hero-title">Tìm kiếm cơ hội nghề nghiệp</h1>
+      <p class="hero-sub">Khám phá các vị trí phù hợp với bạn. Nộp CV và nhận đánh giá từ AI ngay lập tức.</p>
+      <div class="search-bar">
+        <input type="text" id="searchJobs" placeholder="Tìm kiếm vị trí, phòng ban, địa điểm..." />
+        <button type="button">Tìm kiếm</button>
       </div>
     </section>
 
-    <!-- JOBS SECTION -->
-    <main class="container" id="jobs">
-      <div class="section-header">
-        <div>
-          <div class="section-title">Vị trí đang tuyển dụng</div>
-          <div class="section-sub" id="jobCountText">Đang tải...</div>
-        </div>
-        <input type="text" id="searchJobs" placeholder="🔍  Tìm vị trí, phòng ban..." style="width:220px;font-size:0.88rem;padding:9px 14px;" />
-      </div>
+    <!-- MAIN CONTENT -->
+    <main class="page-main">
+      <div class="section-title" id="jobsHeading">Vị trí đang tuyển dụng</div>
       <div class="jobs-grid" id="jobsGrid">
-        <!-- skeleton -->
-        <div class="job-card skeleton" style="min-height:210px;"></div>
-        <div class="job-card skeleton" style="min-height:210px;"></div>
-        <div class="job-card skeleton" style="min-height:210px;"></div>
+        <div class="job-card skeleton" style="height:100px;border:none;"></div>
+        <div class="job-card skeleton" style="height:100px;border:none;"></div>
+        <div class="job-card skeleton" style="height:100px;border:none;"></div>
       </div>
     </main>
 
-    <!-- MODAL: JOB DETAIL + APPLY -->
+    <!-- FOOTER -->
+    <footer class="footer">
+      <p>© 2024 HUNTLY — Hệ thống tuyển dụng thông minh</p>
+    </footer>
+
+    <!-- ══ MODAL: JOB DETAIL + APPLY ══ -->
     <div class="modal" id="modalJobDetail">
       <div class="modal-box">
         <div class="modal-header">
-          <div class="modal-title" id="detailJobTitle">Chi tiết vị trí</div>
-          <button class="modal-close" id="btnCloseDetail">×</button>
+          <div>
+            <div class="modal-title" id="detailJobTitle"></div>
+            <div id="detailChips" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;"></div>
+          </div>
+          <button class="modal-close" id="btnCloseDetail">✕</button>
         </div>
 
-        <!-- Job info -->
-        <div class="jd-chip-row" id="detailChips"></div>
-        <span class="jd-section-label">Mô tả công việc</span>
-        <p class="jd-body" id="detailDesc"></p>
-        <hr class="jd-divider" />
-        <span class="jd-section-label">Yêu cầu</span>
-        <p class="jd-body" id="detailReqs"></p>
-        <div id="detailBenefitsBlock" style="display:none">
-          <hr class="jd-divider" />
-          <span class="jd-section-label">Quyền lợi</span>
-          <p class="jd-body" id="detailBenefits"></p>
+        <div class="modal-section">
+          <div class="modal-section-title">Mô tả công việc</div>
+          <p class="modal-text" id="detailDesc"></p>
         </div>
-        <hr class="jd-divider" />
+        <div class="modal-section">
+          <div class="modal-section-title">Yêu cầu ứng viên</div>
+          <p class="modal-text" id="detailReqs"></p>
+        </div>
+        <div class="modal-section" id="detailBenefitsBlock">
+          <div class="modal-section-title">Quyền lợi</div>
+          <p class="modal-text" id="detailBenefits"></p>
+        </div>
 
-        <!-- Apply form inside same modal -->
-        <span class="jd-section-label">Ứng tuyển ngay</span>
-        <form id="formApply" novalidate>
+        <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;" />
+
+        <div style="font-family:var(--font-serif);font-size:1.1rem;font-weight:bold;margin-bottom:14px;color:var(--text);">Nộp hồ sơ ứng tuyển</div>
+        <form id="formApply">
           <input type="hidden" id="applyJobId" />
           <div class="form-row">
             <div class="form-group">
-              <label for="applyName">Họ và tên *</label>
-              <input type="text" id="applyName" required placeholder="Nguyễn Văn A" />
+              <label class="form-label" for="applyName">Họ và tên *</label>
+              <input type="text" id="applyName" placeholder="Nguyễn Văn A" required />
             </div>
             <div class="form-group">
-              <label for="applyEmail">Email *</label>
-              <input type="email" id="applyEmail" required placeholder="you@email.com" />
+              <label class="form-label" for="applyEmail">Email *</label>
+              <input type="email" id="applyEmail" placeholder="email@example.com" required />
             </div>
           </div>
           <div class="form-group">
-            <label for="applyPhone">Số điện thoại *</label>
-            <input type="text" id="applyPhone" required placeholder="09xxxxxxxx" />
+            <label class="form-label" for="applyPhone">Số điện thoại</label>
+            <input type="tel" id="applyPhone" placeholder="0912 345 678" />
           </div>
           <div class="form-group">
-            <label>File CV (PDF, DOCX, TXT, JPG, PNG) *</label>
+            <label class="form-label" for="applyCoverLetter">Thư giới thiệu (tuỳ chọn)</label>
+            <textarea id="applyCoverLetter" placeholder="Giới thiệu bản thân và lý do ứng tuyển..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">File CV * (PDF, DOCX, TXT)</label>
             <div class="file-drop-zone" id="fileDropZone" onclick="document.getElementById('cvFileInput').click()">
-              <input type="file" id="cvFileInput" required accept=".pdf,.docx,.txt,.png,.jpg,.jpeg" />
-              <svg class="file-drop-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-              </svg>
-              <span class="file-drop-label" id="fileDropLabel">Chọn hoặc kéo thả file CV vào đây</span>
-              <span class="file-drop-hint">Hỗ trợ PDF · DOCX · TXT · JPG · PNG – Tối đa 10MB</span>
+              <div class="file-drop-icon">📄</div>
+              <div id="fileDropLabel">Chọn hoặc kéo thả file CV vào đây</div>
+              <div style="font-size:0.72rem;color:var(--dim);margin-top:4px;">Hỗ trợ: PDF, DOCX, TXT — Tối đa 10MB</div>
             </div>
+            <input type="file" id="cvFileInput" accept=".pdf,.docx,.txt" style="display:none;" />
           </div>
-          <div class="form-group">
-            <label for="applyCoverLetter">Thư giới thiệu (Tùy chọn)</label>
-            <textarea id="applyCoverLetter" placeholder="Giới thiệu ngắn về bản thân và lý do bạn phù hợp..."></textarea>
-          </div>
-          <div class="modal-footer" style="border-top: none; padding-top: 0; margin-top: 8px;">
-            <button type="button" class="btn btn-secondary" id="btnCancelApply">Hủy</button>
-            <button type="submit" class="btn btn-primary" id="btnSubmitApply">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
-              Gửi hồ sơ
-            </button>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-sm" id="btnCancelApply">Hủy</button>
+            <button type="submit" class="btn btn-primary btn-sm" id="btnSubmitApply">Gửi hồ sơ</button>
           </div>
         </form>
       </div>
     </div>
 
-    <!-- MODAL: APPLY SUCCESS -->
+    <!-- ══ MODAL: SUCCESS ══ -->
     <div class="modal" id="modalSuccess">
-      <div class="modal-box" style="max-width:460px;">
-        <div class="success-card" id="successCardContent">
-          <div class="success-icon">✅</div>
-          <h2 style="font-family:var(--font-display);font-size:1.4rem;margin-bottom:12px;">Nộp hồ sơ thành công!</h2>
-          <p style="color:var(--text-muted);font-size:0.95rem;margin-bottom:16px;">AI Gemini đã phân tích CV của bạn.</p>
-          <div id="aiResultBlock"></div>
-        </div>
-        <div style="text-align:center;margin-top:16px;">
+      <div class="modal-box" style="max-width:460px;text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:12px;">✅</div>
+        <h2 style="font-family:var(--font-serif);font-size:1.3rem;font-weight:bold;color:var(--text);margin-bottom:8px;">Nộp hồ sơ thành công!</h2>
+        <p style="color:var(--muted);font-size:0.875rem;line-height:1.6;">Hồ sơ của bạn đã được gửi thành công. Nhà tuyển dụng sẽ liên hệ với bạn sớm nhất.</p>
+        <div id="aiResultBlock" style="margin-top:14px;"></div>
+        <div style="margin-top:18px;">
           <button class="btn btn-primary" id="btnCloseSuccess">Đóng</button>
         </div>
       </div>
     </div>
 
-    <!-- TOAST CONTAINER -->
+    <!-- TOAST -->
     <div id="toast-container"></div>
 
     <script>
       const API = window.location.origin;
-      let jobs = [];
+      let allJobs = [];
 
-      /* ── TOAST ── */
-      function toast(msg, type = 'info') {
-        const ct = document.getElementById('toast-container');
-        const el = document.createElement('div');
-        const icons = { success:'✅', danger:'❌', warning:'⚠️', info:'ℹ️' };
-        el.className = `toast-item ${type}`;
-        el.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
-        ct.appendChild(el);
-        setTimeout(() => el.remove(), 4500);
-      }
-
-      /* ── ESCAPE ── */
       function esc(s) {
-        if (!s) return '';
+        if (s == null) return '';
         return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
       }
-
-      /* ── COPY SHARE LINK ── */
-      function copyJobShareLink(jobId, title) {
-        const shareUrl = `${window.location.origin}${window.location.pathname}?job_id=${jobId}`;
-        navigator.clipboard.writeText(shareUrl).then(() => {
-          toast(`Đã sao chép link ứng tuyển cho "${title||'Vị trí này'}"!`, 'success');
-        }).catch(() => {
-          toast(`Link ứng tuyển: ${shareUrl}`, 'info');
-        });
+      function toast(msg, type = 'info', ms = 3500) {
+        const c = document.getElementById('toast-container');
+        const el = document.createElement('div');
+        el.className = `toast-item ${type}`;
+        el.textContent = msg;
+        c.appendChild(el);
+        setTimeout(() => el.remove(), ms);
       }
 
       /* ── LOAD JOBS ── */
       async function loadJobs() {
         try {
-          const res = await fetch(`${API}/api/v1/jobs`);
-          if (!res.ok) throw new Error('Không tải được danh sách việc làm');
-          jobs = await res.json();
-          renderJobs();
-          checkDirectJobLink();
-        } catch (e) {
-          document.getElementById('jobsGrid').innerHTML = `
-            <div class="empty-state" style="grid-column:1/-1">
-              <div class="empty-icon">⚠️</div>
-              <p>${e.message}</p>
-            </div>`;
+          const res = await fetch(`${API}/api/v1/jobs?status=active`);
+          allJobs = await res.json();
+          renderJobs('');
+        } catch(e) {
+          toast('Không thể tải danh sách việc làm.', 'danger');
         }
       }
 
-      /* ── CHECK DIRECT JOB LINK IN URL ── */
-      async function checkDirectJobLink() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const directJobId = urlParams.get('job_id') || urlParams.get('id');
-        if (!directJobId) return;
-
-        let targetJob = jobs.find(j => String(j.id) === String(directJobId));
-        if (!targetJob) {
-          try {
-            const res = await fetch(`${API}/api/v1/jobs/${directJobId}`);
-            if (res.ok) targetJob = await res.json();
-          } catch (e) {
-            logger.error(e);
-          }
-        }
-
-        if (targetJob) {
-          toast(`Đang mở biểu mẫu ứng tuyển: ${targetJob.title}`, 'info');
-          openJobDetail(targetJob, true);
-        }
-      }
-
-      function renderJobs(filter = '') {
+      function renderJobs(q = '') {
         const grid = document.getElementById('jobsGrid');
-        const visible = jobs.filter(j =>
-          j.status === 'active' &&
-          (!filter || j.title.toLowerCase().includes(filter) || (j.department||'').toLowerCase().includes(filter))
-        );
-
-        document.getElementById('jobCountText').textContent =
-          visible.length > 0 ? `${visible.length} vị trí đang mở` : 'Không tìm thấy vị trí phù hợp';
-
-        if (visible.length === 0) {
-          grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
-            <div class="empty-icon">🔍</div>
-            <p>Không có vị trí phù hợp. Thử tìm từ khóa khác.</p>
-          </div>`;
+        const filtered = allJobs.filter(j => !q || j.title.toLowerCase().includes(q) || (j.department||'').toLowerCase().includes(q) || (j.location||'').toLowerCase().includes(q));
+        const heading = document.getElementById('jobsHeading');
+        heading.textContent = filtered.length + ' vị trí đang tuyển dụng';
+        if (filtered.length === 0) {
+          grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><p>Không tìm thấy vị trí phù hợp.</p></div>`;
           return;
         }
-
         grid.innerHTML = '';
-        visible.forEach(job => {
-          const deadline = job.deadline
-            ? new Date(job.deadline).toLocaleDateString('vi-VN')
-            : 'Không giới hạn';
+        filtered.forEach(job => {
+          const deadline = job.deadline ? new Date(job.deadline).toLocaleDateString('vi-VN') : 'Không giới hạn';
           const views = job.views_count || 0;
+          const icons = { 'Full-time':'💼','Part-time':'⏱','Contract':'📝','Internship':'🎓','Remote':'🌐' };
+          const icon = icons[job.job_type] || '💼';
           const card = document.createElement('div');
           card.className = 'job-card';
           card.innerHTML = `
-            <div>
-              <div class="job-title-text">${esc(job.title)}</div>
-              <div class="job-meta">
-                <span class="badge badge-primary">${esc(job.job_type||'Full-time')}</span>
-                ${job.department ? `<span class="badge">${esc(job.department)}</span>` : ''}
-                ${job.location   ? `<span class="badge">${esc(job.location)}</span>` : ''}
+            <div class="job-card-icon">${icon}</div>
+            <div class="job-card-body">
+              <div class="job-card-title">${esc(job.title)}</div>
+              <div class="job-card-meta">
+                ${job.job_type   ? `<span class="badge badge-dim">${esc(job.job_type)}</span>` : ''}
+                ${job.department ? `<span class="badge badge-dim">${esc(job.department)}</span>` : ''}
+                ${job.location   ? `<span class="badge badge-dim">📍 ${esc(job.location)}</span>` : ''}
                 <span class="badge badge-warning">⏰ ${deadline}</span>
-                <span class="badge" style="background:rgba(255,255,255,0.06);color:var(--text-muted);">👁️ ${views} lượt xem</span>
+                <span class="badge badge-dim">👁 ${views} lượt xem</span>
               </div>
-              <p class="job-desc-preview">${esc(job.description||'')}</p>
-            </div>
-            <div style="display:flex;gap:8px;margin-top:12px;">
-              <button class="btn btn-primary btn-full btn-apply-action">Xem chi tiết & Ứng tuyển →</button>
-              <button class="btn btn-secondary btn-share-action" title="Sao chép link ứng tuyển trực tiếp">🔗 Link</button>
+              <p class="job-card-desc">${esc(job.description || '')}</p>
+              <div class="job-card-actions">
+                <button class="btn btn-primary btn-sm btn-apply-action">Xem chi tiết &amp; Ứng tuyển</button>
+                <button class="btn btn-sm btn-share-action">🔗 Copy link</button>
+              </div>
             </div>
           `;
-          card.querySelector('.btn-apply-action').addEventListener('click', () => openJobDetail(job, true));
-          card.querySelector('.btn-share-action').addEventListener('click', () => copyJobShareLink(job.id, job.title));
+          card.querySelector('.btn-apply-action').addEventListener('click', () => openJobDetail(job));
+          card.querySelector('.btn-share-action').addEventListener('click', () => copyJobLink(job.id, job.title));
           grid.appendChild(card);
         });
       }
@@ -872,41 +609,39 @@
       document.getElementById('searchJobs').addEventListener('input', e => {
         renderJobs(e.target.value.toLowerCase().trim());
       });
+      document.querySelector('.search-bar button').addEventListener('click', () => {
+        renderJobs(document.getElementById('searchJobs').value.toLowerCase().trim());
+      });
+
+      function copyJobLink(jobId, title) {
+        const url = `${window.location.origin}/ui/#job-${jobId}`;
+        navigator.clipboard.writeText(url).then(() => toast(`Đã copy link: ${title}`, 'success'));
+      }
 
       /* ── JOB DETAIL MODAL ── */
-      async function openJobDetail(job, recordView = true) {
-        if (recordView) {
-          try {
-            fetch(`${API}/api/v1/jobs/${job.id}/view`, { method: 'POST' });
-            job.views_count = (job.views_count || 0) + 1;
-          } catch(e) {}
-        }
-
+      async function openJobDetail(job) {
+        try { fetch(`${API}/api/v1/jobs/${job.id}/view`, { method: 'POST' }); } catch(e) {}
         document.getElementById('detailJobTitle').textContent = job.title;
-        document.getElementById('detailDesc').textContent = job.description || '—';
-        document.getElementById('detailReqs').textContent = job.requirements || '—';
+        document.getElementById('detailDesc').textContent = job.description || '';
+        document.getElementById('detailReqs').textContent  = job.requirements || '';
         if (job.benefits) {
           document.getElementById('detailBenefits').textContent = job.benefits;
           document.getElementById('detailBenefitsBlock').style.display = '';
         } else {
           document.getElementById('detailBenefitsBlock').style.display = 'none';
         }
-
-        const deadline = job.deadline
-          ? new Date(job.deadline).toLocaleDateString('vi-VN')
-          : 'Không giới hạn';
+        const deadline = job.deadline ? new Date(job.deadline).toLocaleDateString('vi-VN') : 'Không giới hạn';
         document.getElementById('detailChips').innerHTML = `
-          <span class="badge badge-primary">${esc(job.job_type||'Full-time')}</span>
-          ${job.department ? `<span class="badge">${esc(job.department)}</span>` : ''}
-          ${job.location   ? `<span class="badge">${esc(job.location)}</span>` : ''}
+          ${job.job_type   ? `<span class="badge badge-dim">${esc(job.job_type)}</span>` : ''}
+          ${job.department ? `<span class="badge badge-dim">${esc(job.department)}</span>` : ''}
+          ${job.location   ? `<span class="badge badge-dim">📍 ${esc(job.location)}</span>` : ''}
           <span class="badge badge-warning">Hạn: ${deadline}</span>
-          <span class="badge" style="background:rgba(79,163,232,0.15);color:var(--primary);">🔗 Link ứng tuyển trực tiếp</span>
         `;
-
         document.getElementById('applyJobId').value = job.id;
         document.getElementById('formApply').reset();
-        document.getElementById('fileDropLabel').textContent = 'Chọn hoặc kéo thả file CV vào đây';
-        document.getElementById('fileDropLabel').style.color = '';
+        const lbl = document.getElementById('fileDropLabel');
+        lbl.textContent = 'Chọn hoặc kéo thả file CV vào đây';
+        lbl.style.color = '';
         document.getElementById('modalJobDetail').classList.add('open');
       }
 
@@ -929,8 +664,6 @@
           lbl.style.color = '';
         }
       });
-
-      // Drag & drop
       const dropZone = document.getElementById('fileDropZone');
       ['dragenter','dragover'].forEach(ev => dropZone.addEventListener(ev, e => {
         e.preventDefault(); dropZone.classList.add('drag-over');
@@ -952,46 +685,34 @@
         const jobId = document.getElementById('applyJobId').value;
         const btn = document.getElementById('btnSubmitApply');
         const cvFile = document.getElementById('cvFileInput').files[0];
-
         if (!cvFile) { toast('Vui lòng chọn file CV.', 'warning'); return; }
-
         btn.disabled = true;
-        btn.innerHTML = '<span style="animation:spin 1s linear infinite;display:inline-block">⏳</span> Đang phân tích CV…';
-
+        btn.textContent = '⏳ Đang phân tích CV...';
         const fd = new FormData();
         fd.append('full_name',    document.getElementById('applyName').value.trim());
         fd.append('email',        document.getElementById('applyEmail').value.trim());
         fd.append('phone',        document.getElementById('applyPhone').value.trim());
         fd.append('cover_letter', document.getElementById('applyCoverLetter').value.trim());
         fd.append('cv_file',      cvFile);
-
         try {
-          const res = await fetch(`${API}/api/v1/jobs/${jobId}/apply`, {
-            method: 'POST', body: fd
-          });
+          const res  = await fetch(`${API}/api/v1/jobs/${jobId}/apply`, { method: 'POST', body: fd });
           const data = await res.json();
           if (!res.ok) throw new Error(data.detail || 'Gửi hồ sơ thất bại');
-
           document.getElementById('modalJobDetail').classList.remove('open');
           showSuccessModal(data);
-        } catch (err) {
+        } catch(err) {
           toast(err.message, 'danger');
         } finally {
           btn.disabled = false;
-          btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg> Gửi hồ sơ`;
+          btn.textContent = 'Gửi hồ sơ';
         }
       });
 
       function showSuccessModal(data) {
-        // AI scoring runs as background task – score won't be available immediately
         document.getElementById('aiResultBlock').innerHTML = `
-          <div style="display:flex;align-items:center;gap:10px;justify-content:center;margin:16px 0;">
-            <span style="display:inline-block;animation:spin 1s linear infinite;font-size:1.5rem;">⚙️</span>
-            <span style="color:var(--text-muted);font-size:0.95rem;">AI Gemini đang phân tích CV của bạn...</span>
-          </div>
-          <p style="color:var(--text-dim);font-size:0.82rem;margin-top:4px;">Nhà tuyển dụng sẽ nhận được báo cáo AI và liên hệ với bạn sớm nhất.</p>
-          <div style="margin-top:16px;padding:12px 16px;background:rgba(79,163,232,0.08);border:1px solid rgba(79,163,232,0.2);border-radius:8px;font-size:0.85rem;color:var(--text-muted);">
-            📋 Mã hồ sơ: <strong style="color:var(--primary);">#${data.application_id || ''}</strong>
+          <div style="padding:12px 16px;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);font-size:0.85rem;color:var(--muted);">
+            AI Gemini đang phân tích CV của bạn... Nhà tuyển dụng sẽ nhận báo cáo và liên hệ sớm nhất.<br/>
+            <span style="margin-top:4px;display:inline-block;">📋 Mã hồ sơ: <strong style="color:var(--text);">#${data.application_id || ''}</strong></span>
           </div>
         `;
         document.getElementById('modalSuccess').classList.add('open');
@@ -1002,7 +723,6 @@
 
       /* ── INIT ── */
       loadJobs();
-
     </script>
   </body>
 </html>

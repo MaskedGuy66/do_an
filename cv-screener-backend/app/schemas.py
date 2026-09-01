@@ -110,6 +110,8 @@ class JobStatsResponse(BaseModel):
     conversion_rate: float = 0.0
     pass_rate: float = 0.0
     avg_ai_score: Optional[float] = None
+    positive_score_count: int = 0
+    negative_score_count: int = 0
 
 class JobAnalyticsItem(BaseModel):
     job_id: int

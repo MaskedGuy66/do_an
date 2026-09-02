@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Dict, List, Optional
 from datetime import datetime
 
@@ -12,8 +12,8 @@ class JDCriteriaSchema(BaseModel):
 
 # Schema dùng cho API Request gửi lên từ Client
 class JDIngestRequest(BaseModel):
-    title: str = Field(..., example="Python Backend Engineer")
-    raw_text: str = Field(..., example="Tuyển dụng lập trình viên Python từ 2 năm kinh nghiệm, thành thạo FastAPI...")
+    title: str = Field(..., json_schema_extra={"example": "Python Backend Engineer"})
+    raw_text: str = Field(..., json_schema_extra={"example": "Tuyển dụng lập trình viên Python từ 2 năm kinh nghiệm, thành thạo FastAPI..."})
 
 class SkillMatchItem(BaseModel):
     skill: str = Field(..., description="Tên kỹ năng hoặc công nghệ.")
@@ -61,8 +61,7 @@ class JobPostingResponse(JobPostingBase):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class JobApplicationBase(BaseModel):
     full_name: Optional[str] = None
@@ -83,8 +82,7 @@ class JobApplicationResponse(JobApplicationBase):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class JobApplicationAdminUpdate(BaseModel):
     admin_notes: Optional[str] = None

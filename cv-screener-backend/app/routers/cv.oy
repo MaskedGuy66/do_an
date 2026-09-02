@@ -1,2 +1,0 @@
-# Legacy compatibility shim for the CV router implementation.
-from app.routers.cv import *  # noqa: F401,F403

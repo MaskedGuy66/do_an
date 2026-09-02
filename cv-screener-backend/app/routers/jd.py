@@ -11,7 +11,12 @@ from app.schemas import JDIngestRequest
 from app.services import gemini_service
 from app.services.pdf_service import extract_text_from_file
 
+from pathlib import Path
+
 logger = logging.getLogger(__name__)
+
+# Absolute path để tránh phụ thuộc vào cwd khi chạy uvicorn
+_BASE_UPLOAD_DIR = Path(__file__).resolve().parent.parent.parent / "uploads"
 
 router = APIRouter(prefix="/api/v1/jd", tags=["Job Description"])
 
@@ -99,7 +104,7 @@ async def ingest_jd_file(
                 detail="File JD trống.",
             )
 
-        upload_dir = os.path.join("uploads", "jd")
+        upload_dir = str(_BASE_UPLOAD_DIR / "jd")
         os.makedirs(upload_dir, exist_ok=True)
         unique_filename = f"{uuid.uuid4()}{file_extension}"
         file_path = os.path.join(upload_dir, unique_filename)
@@ -190,7 +195,7 @@ async def ingest_jd_image(
                 detail="File ảnh JD trống.",
             )
 
-        upload_dir = os.path.join("uploads", "jd")
+        upload_dir = str(_BASE_UPLOAD_DIR / "jd")
         os.makedirs(upload_dir, exist_ok=True)
         unique_filename = f"{uuid.uuid4()}{file_extension}"
         image_path = os.path.join(upload_dir, unique_filename)
@@ -245,7 +250,7 @@ def list_jds(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
                 {
                     "id": jd.id,
                     "title": jd.title,
-                    "created_at": jd.created_at.isoformat() if hasattr(jd, "created_at") and jd.created_at else None,
+                    "created_at": jd.created_at.isoformat() if jd.created_at else None,
                     "required_skills": jd.extracted_criteria.get("required_skills", []) if jd.extracted_criteria else [],
                     "min_years_experience": jd.extracted_criteria.get("min_years_experience", 0) if jd.extracted_criteria else 0,
                 }
@@ -278,7 +283,7 @@ def get_jd_detail(jd_id: int, db: Session = Depends(get_db)):
             "raw_text": jd.raw_text,
             "image_path": jd.image_path,
             "extracted_criteria": jd.extracted_criteria,
-            "created_at": jd.created_at.isoformat() if hasattr(jd, "created_at") and jd.created_at else None,
+            "created_at": jd.created_at.isoformat() if jd.created_at else None,
         }
     except HTTPException:
         raise

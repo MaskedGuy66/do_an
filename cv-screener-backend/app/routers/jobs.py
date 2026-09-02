@@ -1,8 +1,9 @@
 import logging
 import os
 import uuid
+from pathlib import Path
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status, BackgroundTasks, Query
 from app.tasks import run_scoring_task, run_scoring_in_thread
@@ -11,6 +12,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app import models, schemas
+from app.dependencies import require_admin
 from app.services import gemini_service
 from app.services.pdf_service import extract_text_from_file
 
@@ -18,7 +20,8 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/jobs", tags=["Job Portal"])
 
-UPLOAD_DIR = "uploads"
+# Dùng absolute path để tránh phụ thuộc vào cwd
+UPLOAD_DIR = str(Path(__file__).resolve().parent.parent.parent / "uploads")
 MAX_FILE_SIZE = 10 * 1024 * 1024
 SUPPORTED_CV_EXTENSIONS = {".pdf", ".docx", ".txt", ".png", ".jpg", ".jpeg"}
 
@@ -27,7 +30,8 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 # ─── Job Posting APIs ────────────────────────────────────────────────────────
 
-@router.post("", response_model=schemas.JobPostingResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=schemas.JobPostingResponse, status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(require_admin)])
 def create_job(payload: schemas.JobPostingCreate, db: Session = Depends(get_db)):
     """Tạo mới tin tuyển dụng."""
     try:
@@ -157,7 +161,8 @@ def increment_job_view(id: int, db: Session = Depends(get_db)):
 
 
 
-@router.put("/{id}", response_model=schemas.JobPostingResponse)
+@router.put("/{id}", response_model=schemas.JobPostingResponse,
+            dependencies=[Depends(require_admin)])
 def update_job(id: int, payload: schemas.JobPostingUpdate, db: Session = Depends(get_db)):
     """Cập nhật tin tuyển dụng."""
     job = db.query(models.JobPosting).filter(models.JobPosting.id == id).first()
@@ -168,7 +173,7 @@ def update_job(id: int, payload: schemas.JobPostingUpdate, db: Session = Depends
         update_data = payload.model_dump(exclude_unset=True)
         for key, value in update_data.items():
             setattr(job, key, value)
-        job.updated_at = datetime.utcnow()
+        job.updated_at = datetime.now(timezone.utc)
         db.commit()
         db.refresh(job)
         return job
@@ -181,7 +186,8 @@ def update_job(id: int, payload: schemas.JobPostingUpdate, db: Session = Depends
         )
 
 
-@router.delete("/{id}", status_code=status.HTTP_200_OK)
+@router.delete("/{id}", status_code=status.HTTP_200_OK,
+               dependencies=[Depends(require_admin)])
 def delete_job(id: int, db: Session = Depends(get_db)):
     """Xóa tin tuyển dụng."""
     job = db.query(models.JobPosting).filter(models.JobPosting.id == id).first()
@@ -403,7 +409,8 @@ def get_application(job_id: int, application_id: int, db: Session = Depends(get_
     return app_record
 
 
-@router.patch("/{job_id}/applications/{application_id}", response_model=schemas.JobApplicationResponse)
+@router.patch("/{job_id}/applications/{application_id}", response_model=schemas.JobApplicationResponse,
+              dependencies=[Depends(require_admin)])
 def review_application(
     job_id: int,
     application_id: int,
@@ -427,7 +434,7 @@ def review_application(
         if payload.status is not None:
             app_record.status = payload.status
 
-        app_record.updated_at = datetime.utcnow()
+        app_record.updated_at = datetime.now(timezone.utc)
         db.commit()
         db.refresh(app_record)
         return app_record
@@ -440,7 +447,8 @@ def review_application(
         )
 
 
-@router.post("/{job_id}/applications/{application_id}/evaluate")
+@router.post("/{job_id}/applications/{application_id}/evaluate",
+             dependencies=[Depends(require_admin)])
 def evaluate_application_manually(job_id: int, application_id: int, db: Session = Depends(get_db)):
     """Kích hoạt lại đánh giá AI thủ công cho một CV đã nộp."""
     print(f"[MANUAL EVAL] Kích hoạt đánh giá AI thủ công cho Application {application_id} / Job {job_id}")
@@ -480,7 +488,7 @@ def evaluate_application_manually(job_id: int, application_id: int, db: Session 
         app_record.ai_fit_status = evaluation.fit_status
         app_record.ai_evaluation = evaluation.model_dump()
         app_record.status = "ai_reviewed"
-        app_record.updated_at = datetime.utcnow()
+        app_record.updated_at = datetime.now(timezone.utc)
         db.commit()
         db.refresh(app_record)
 

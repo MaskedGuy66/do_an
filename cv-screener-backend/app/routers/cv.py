@@ -9,7 +9,9 @@ from app import models
 from app.services import gemini_service
 from app.services.pdf_service import extract_text_from_file
 
-UPLOAD_DIR = "uploads"
+from pathlib import Path
+
+UPLOAD_DIR = str(Path(__file__).resolve().parent.parent.parent / "uploads")
 MAX_FILE_SIZE = 10 * 1024 * 1024
 MIN_TEXT_LENGTH = 50
 SUPPORTED_CV_EXTENSIONS = {".pdf", ".docx", ".txt", ".png", ".jpg", ".jpeg"}

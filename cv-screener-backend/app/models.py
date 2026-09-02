@@ -44,6 +44,10 @@ class JobDescription(Base):
     
     # Lưu cấu trúc tiêu chí dạng JSON được bóc tách từ Gemini (skills, experience, education,...)
     extracted_criteria = Column(JSON, nullable=True)
+    
+    # Mốc thời gian – cần thiết cho listing theo ngày tạo
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
 class JobPosting(Base):
     __tablename__ = "job_postings"
